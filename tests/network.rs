@@ -1,4 +1,4 @@
-use fraiseql_validators::network::{Port, MacAddressEui48, MacAddressEui64};
+use fraiseql_validators::network::{Port, MacAddressEui48, MacAddressEui64, Ipv4Address};
 
 #[test]
 fn test_port_try_from_valid() {
@@ -172,4 +172,83 @@ fn test_mac_address_eui64_from_eui48() {
     let eui64 = MacAddressEui64::from_eui48(&eui48);
     assert_eq!(eui64.to_canonical(), "00:1a:2b:ff:fe:3c:4d:5e");
     assert_eq!(eui64.octets(), [0x00, 0x1A, 0x2B, 0xFF, 0xFE, 0x3C, 0x4D, 0x5E]);
+}
+
+#[test]
+fn test_ipv4_address_try_from_valid() {
+    let ip = Ipv4Address::try_from("192.168.1.1").unwrap();
+    assert_eq!(ip.octets(), [192, 168, 1, 1]);
+    assert_eq!(format!("{}", ip), "192.168.1.1");
+}
+
+#[test]
+fn test_ipv4_address_try_from_zero() {
+    let ip = Ipv4Address::try_from("0.0.0.0").unwrap();
+    assert_eq!(ip.octets(), [0, 0, 0, 0]);
+}
+
+#[test]
+fn test_ipv4_address_try_from_max() {
+    let ip = Ipv4Address::try_from("255.255.255.255").unwrap();
+    assert_eq!(ip.octets(), [255, 255, 255, 255]);
+}
+
+#[test]
+fn test_ipv4_address_try_from_octet_too_large() {
+    let result = Ipv4Address::try_from("192.168.1.256");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, "octet value must be between 0 and 255");
+}
+
+#[test]
+fn test_ipv4_address_try_from_too_few_octets() {
+    let result = Ipv4Address::try_from("192.168.1");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, "IPv4 address must have exactly 4 octets");
+}
+
+#[test]
+fn test_ipv4_address_try_from_too_many_octets() {
+    let result = Ipv4Address::try_from("192.168.1.1.1");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, "IPv4 address must have exactly 4 octets");
+}
+
+#[test]
+fn test_ipv4_address_try_from_leading_zero() {
+    let result = Ipv4Address::try_from("192.168.01.1");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, "octet cannot have leading zeros");
+}
+
+#[test]
+fn test_ipv4_address_is_loopback() {
+    let loopback = Ipv4Address::try_from("127.0.0.1").unwrap();
+    assert!(loopback.is_loopback());
+    let not_loopback = Ipv4Address::try_from("192.168.1.1").unwrap();
+    assert!(!not_loopback.is_loopback());
+}
+
+#[test]
+fn test_ipv4_address_is_private() {
+    let private10 = Ipv4Address::try_from("10.0.0.1").unwrap();
+    assert!(private10.is_private());
+    let private172 = Ipv4Address::try_from("172.16.0.1").unwrap();
+    assert!(private172.is_private());
+    let private192 = Ipv4Address::try_from("192.168.0.1").unwrap();
+    assert!(private192.is_private());
+    let public = Ipv4Address::try_from("8.8.8.8").unwrap();
+    assert!(!public.is_private());
+}
+
+#[test]
+fn test_ipv4_address_is_link_local() {
+    let link_local = Ipv4Address::try_from("169.254.0.1").unwrap();
+    assert!(link_local.is_link_local());
+    let not_link_local = Ipv4Address::try_from("192.168.1.1").unwrap();
+    assert!(!not_link_local.is_link_local());
 }

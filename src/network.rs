@@ -12,6 +12,9 @@ pub struct MacAddressEui48([u8; 6]);
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MacAddressEui64([u8; 8]);
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Ipv4Address([u8; 4]);
+
 impl Port {
     pub const HTTP: Self = Self(80);
     pub const HTTPS: Self = Self(443);
@@ -179,5 +182,73 @@ impl core::convert::TryFrom<&str> for MacAddressEui64 {
 impl fmt::Display for MacAddressEui64 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.to_canonical())
+    }
+}
+
+impl Ipv4Address {
+    #[must_use]
+    pub const fn octets(&self) -> [u8; 4] {
+        self.0
+    }
+
+    #[must_use]
+    pub const fn is_loopback(&self) -> bool {
+        self.0[0] == 127
+    }
+
+    #[must_use]
+    pub const fn is_private(&self) -> bool {
+        // 10.0.0.0/8
+        self.0[0] == 10 ||
+        // 172.16.0.0/12
+        (self.0[0] == 172 && self.0[1] >= 16 && self.0[1] <= 31) ||
+        // 192.168.0.0/16
+        (self.0[0] == 192 && self.0[1] == 168)
+    }
+
+    #[must_use]
+    pub const fn is_link_local(&self) -> bool {
+        // 169.254.0.0/16
+        self.0[0] == 169 && self.0[1] == 254
+    }
+}
+
+impl core::convert::TryFrom<&str> for Ipv4Address {
+    type Error = ValidationError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        let parts: Vec<&str> = value.split('.').collect();
+        if parts.len() != 4 {
+            return Err(ValidationError {
+                type_name: "Ipv4Address",
+                input: String::from(value),
+                reason: String::from("IPv4 address must have exactly 4 octets"),
+            });
+        }
+
+        let mut octets = [0u8; 4];
+        for (i, part) in parts.iter().enumerate() {
+            if part.is_empty() || (part.len() > 1 && part.starts_with('0')) {
+                return Err(ValidationError {
+                    type_name: "Ipv4Address",
+                    input: String::from(value),
+                    reason: String::from("octet cannot have leading zeros"),
+                });
+            }
+            let octet: u8 = part.parse().map_err(|_| ValidationError {
+                type_name: "Ipv4Address",
+                input: String::from(value),
+                reason: String::from("octet value must be between 0 and 255"),
+            })?;
+            octets[i] = octet;
+        }
+
+        Ok(Self(octets))
+    }
+}
+
+impl fmt::Display for Ipv4Address {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}.{}.{}.{}", self.0[0], self.0[1], self.0[2], self.0[3])
     }
 }
