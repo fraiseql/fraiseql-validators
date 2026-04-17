@@ -1,5 +1,276 @@
-   0.006394586s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="helpers"}: cargo::core::compiler::fingerprint: fingerprint error for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "helpers", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/helpers.rs", Edition2021) }
-   0.006405253s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="helpers"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/lionel/code/fraiseql-validators/target/debug/.fingerprint/fraiseql-validators-e36fa0a288fa5b56/test-integration-test-helpers`
+    Updating crates.io index
+     Locking 11 packages to latest compatible versions
+      Adding csv v1.4.0
+      Adding csv-core v0.1.13
+      Adding itoa v1.0.18
+      Adding memchr v2.8.0
+      Adding proc-macro2 v1.0.106
+      Adding quote v1.0.45
+      Adding ryu v1.0.23
+      Adding serde_core v1.0.228
+      Adding serde_derive v1.0.228
+      Adding syn v2.0.117
+      Adding unicode-ident v1.0.24
+   0.340435847s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint: fingerprint error for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("fraiseql_validators", ["lib"], "/home/lionel/code/fraiseql-validators/src/lib.rs", Edition2021) }
+   0.340446464s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/lionel/code/fraiseql-validators/target/debug/.fingerprint/fraiseql-validators-ccb5cfc1d48826df/lib-fraiseql_validators`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: cargo_util::paths::read_bytes
+   1: cargo_util::paths::read
+   2: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   3: cargo::core::compiler::fingerprint::prepare_target
+   4: cargo::core::compiler::compile
+   5: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   6: cargo::ops::cargo_compile::compile_ws
+   7: cargo::ops::cargo_compile::compile_with_exec
+   8: cargo::ops::cargo_compile::compile
+   9: cargo::commands::check::exec
+  10: <cargo::cli::Exec>::exec
+  11: cargo::main
+  12: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  13: std::rt::lang_start::<()>::{closure#0}
+  14: core::ops::function::impls::<impl core::ops::function::FnOnce<A> for &F>::call_once
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/core/src/ops/function.rs:287:21
+  15: std::panicking::catch_unwind::do_call
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:581:40
+  16: std::panicking::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:544:19
+  17: std::panic::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panic.rs:359:14
+  18: std::rt::lang_start_internal::{{closure}}
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/rt.rs:175:24
+  19: std::panicking::catch_unwind::do_call
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:581:40
+  20: std::panicking::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:544:19
+  21: std::panic::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panic.rs:359:14
+  22: std::rt::lang_start_internal
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/rt.rs:171:5
+  23: main
+  24: <unknown>
+  25: __libc_start_main
+  26: <unknown>
+   0.344411125s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint: fingerprint error for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { name_inferred: true, ..: lib_target("fraiseql_validators", ["lib"], "/home/lionel/code/fraiseql-validators/src/lib.rs", Edition2021) }
+   0.344418162s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/lionel/code/fraiseql-validators/target/debug/.fingerprint/fraiseql-validators-58637f0daa1e9fde/test-lib-fraiseql_validators`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: cargo_util::paths::read_bytes
+   1: cargo_util::paths::read
+   2: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   3: cargo::core::compiler::fingerprint::prepare_target
+   4: cargo::core::compiler::compile
+   5: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   6: cargo::ops::cargo_compile::compile_ws
+   7: cargo::ops::cargo_compile::compile_with_exec
+   8: cargo::ops::cargo_compile::compile
+   9: cargo::commands::check::exec
+  10: <cargo::cli::Exec>::exec
+  11: cargo::main
+  12: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  13: std::rt::lang_start::<()>::{closure#0}
+  14: core::ops::function::impls::<impl core::ops::function::FnOnce<A> for &F>::call_once
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/core/src/ops/function.rs:287:21
+  15: std::panicking::catch_unwind::do_call
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:581:40
+  16: std::panicking::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:544:19
+  17: std::panic::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panic.rs:359:14
+  18: std::rt::lang_start_internal::{{closure}}
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/rt.rs:175:24
+  19: std::panicking::catch_unwind::do_call
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:581:40
+  20: std::panicking::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:544:19
+  21: std::panic::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panic.rs:359:14
+  22: std::rt::lang_start_internal
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/rt.rs:171:5
+  23: main
+  24: <unknown>
+  25: __libc_start_main
+  26: <unknown>
+   0.344534327s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="build_rs"}: cargo::core::compiler::fingerprint: fingerprint error for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "build_rs", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/build_rs.rs", Edition2021) }
+   0.344538357s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="build_rs"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/lionel/code/fraiseql-validators/target/debug/.fingerprint/fraiseql-validators-ddba5c992373f25d/test-integration-test-build_rs`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: cargo_util::paths::read_bytes
+   1: cargo_util::paths::read
+   2: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   3: cargo::core::compiler::fingerprint::prepare_target
+   4: cargo::core::compiler::compile
+   5: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   6: cargo::ops::cargo_compile::compile_ws
+   7: cargo::ops::cargo_compile::compile_with_exec
+   8: cargo::ops::cargo_compile::compile
+   9: cargo::commands::check::exec
+  10: <cargo::cli::Exec>::exec
+  11: cargo::main
+  12: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  13: std::rt::lang_start::<()>::{closure#0}
+  14: core::ops::function::impls::<impl core::ops::function::FnOnce<A> for &F>::call_once
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/core/src/ops/function.rs:287:21
+  15: std::panicking::catch_unwind::do_call
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:581:40
+  16: std::panicking::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:544:19
+  17: std::panic::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panic.rs:359:14
+  18: std::rt::lang_start_internal::{{closure}}
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/rt.rs:175:24
+  19: std::panicking::catch_unwind::do_call
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:581:40
+  20: std::panicking::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:544:19
+  21: std::panic::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panic.rs:359:14
+  22: std::rt::lang_start_internal
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/rt.rs:171:5
+  23: main
+  24: <unknown>
+  25: __libc_start_main
+  26: <unknown>
+   0.344690572s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="contract"}: cargo::core::compiler::fingerprint: fingerprint error for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "contract", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/contract.rs", Edition2021) }
+   0.344693857s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="contract"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/lionel/code/fraiseql-validators/target/debug/.fingerprint/fraiseql-validators-70c1c0bd4c92f493/test-integration-test-contract`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: cargo_util::paths::read_bytes
+   1: cargo_util::paths::read
+   2: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   3: cargo::core::compiler::fingerprint::prepare_target
+   4: cargo::core::compiler::compile
+   5: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   6: cargo::ops::cargo_compile::compile_ws
+   7: cargo::ops::cargo_compile::compile_with_exec
+   8: cargo::ops::cargo_compile::compile
+   9: cargo::commands::check::exec
+  10: <cargo::cli::Exec>::exec
+  11: cargo::main
+  12: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  13: std::rt::lang_start::<()>::{closure#0}
+  14: core::ops::function::impls::<impl core::ops::function::FnOnce<A> for &F>::call_once
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/core/src/ops/function.rs:287:21
+  15: std::panicking::catch_unwind::do_call
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:581:40
+  16: std::panicking::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:544:19
+  17: std::panic::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panic.rs:359:14
+  18: std::rt::lang_start_internal::{{closure}}
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/rt.rs:175:24
+  19: std::panicking::catch_unwind::do_call
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:581:40
+  20: std::panicking::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:544:19
+  21: std::panic::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panic.rs:359:14
+  22: std::rt::lang_start_internal
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/rt.rs:171:5
+  23: main
+  24: <unknown>
+  25: __libc_start_main
+  26: <unknown>
+   0.344792473s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="crate_exists"}: cargo::core::compiler::fingerprint: fingerprint error for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "crate_exists", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/crate_exists.rs", Edition2021) }
+   0.344795404s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="crate_exists"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/lionel/code/fraiseql-validators/target/debug/.fingerprint/fraiseql-validators-37dfdca157cab16b/test-integration-test-crate_exists`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: cargo_util::paths::read_bytes
+   1: cargo_util::paths::read
+   2: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   3: cargo::core::compiler::fingerprint::prepare_target
+   4: cargo::core::compiler::compile
+   5: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   6: cargo::ops::cargo_compile::compile_ws
+   7: cargo::ops::cargo_compile::compile_with_exec
+   8: cargo::ops::cargo_compile::compile
+   9: cargo::commands::check::exec
+  10: <cargo::cli::Exec>::exec
+  11: cargo::main
+  12: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  13: std::rt::lang_start::<()>::{closure#0}
+  14: core::ops::function::impls::<impl core::ops::function::FnOnce<A> for &F>::call_once
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/core/src/ops/function.rs:287:21
+  15: std::panicking::catch_unwind::do_call
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:581:40
+  16: std::panicking::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:544:19
+  17: std::panic::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panic.rs:359:14
+  18: std::rt::lang_start_internal::{{closure}}
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/rt.rs:175:24
+  19: std::panicking::catch_unwind::do_call
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:581:40
+  20: std::panicking::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:544:19
+  21: std::panic::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panic.rs:359:14
+  22: std::rt::lang_start_internal
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/rt.rs:171:5
+  23: main
+  24: <unknown>
+  25: __libc_start_main
+  26: <unknown>
+   0.344888217s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="helpers"}: cargo::core::compiler::fingerprint: fingerprint error for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "helpers", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/helpers.rs", Edition2021) }
+   0.344891093s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="helpers"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/lionel/code/fraiseql-validators/target/debug/.fingerprint/fraiseql-validators-0098e0a6fd278276/test-integration-test-helpers`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: cargo_util::paths::read_bytes
+   1: cargo_util::paths::read
+   2: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   3: cargo::core::compiler::fingerprint::prepare_target
+   4: cargo::core::compiler::compile
+   5: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   6: cargo::ops::cargo_compile::compile_ws
+   7: cargo::ops::cargo_compile::compile_with_exec
+   8: cargo::ops::cargo_compile::compile
+   9: cargo::commands::check::exec
+  10: <cargo::cli::Exec>::exec
+  11: cargo::main
+  12: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  13: std::rt::lang_start::<()>::{closure#0}
+  14: core::ops::function::impls::<impl core::ops::function::FnOnce<A> for &F>::call_once
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/core/src/ops/function.rs:287:21
+  15: std::panicking::catch_unwind::do_call
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:581:40
+  16: std::panicking::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:544:19
+  17: std::panic::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panic.rs:359:14
+  18: std::rt::lang_start_internal::{{closure}}
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/rt.rs:175:24
+  19: std::panicking::catch_unwind::do_call
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:581:40
+  20: std::panicking::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:544:19
+  21: std::panic::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panic.rs:359:14
+  22: std::rt::lang_start_internal
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/rt.rs:171:5
+  23: main
+  24: <unknown>
+  25: __libc_start_main
+  26: <unknown>
+   0.344987589s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="validation_error"}: cargo::core::compiler::fingerprint: fingerprint error for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "validation_error", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/validation_error.rs", Edition2021) }
+   0.344990470s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="validation_error"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/lionel/code/fraiseql-validators/target/debug/.fingerprint/fraiseql-validators-a3f7e25cd006e853/test-integration-test-validation_error`
 
 Caused by:
     No such file or directory (os error 2)
@@ -42,4 +313,4 @@ Stack backtrace:
   25: __libc_start_main
   26: <unknown>
     Checking fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)
-    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.02s
+error: could not compile `fraiseql-validators` (test "build_rs") due to 1 previous error

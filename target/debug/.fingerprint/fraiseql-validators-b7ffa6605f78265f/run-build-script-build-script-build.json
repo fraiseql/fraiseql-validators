@@ -1,0 +1,1 @@
+{"rustc":5391851738765093524,"features":"","declared_features":"","target":0,"profile":0,"path":0,"deps":[[13724479959860021551,"build_script_build",false,4759766537043686807]],"local":[{"RerunIfChanged":{"output":"debug/build/fraiseql-validators-b7ffa6605f78265f/output","paths":["data/sample.csv"]}}],"rustflags":[],"config":0,"compile_kind":0}
