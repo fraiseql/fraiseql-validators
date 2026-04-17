@@ -1,17 +1,17 @@
-   0.006787002s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint: dependency on `build_script_build` is newer than we are 1776423675.120063662s > 1776423615.047059629s "/home/lionel/code/fraiseql-validators"
-   0.006811491s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint: fingerprint dirty for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("fraiseql_validators", ["lib"], "/home/lionel/code/fraiseql-validators/src/lib.rs", Edition2021) }
-   0.006816759s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(9) }
-   0.006978389s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint: dependency on `build_script_build` is newer than we are 1776423675.120063662s > 1776423615.047059629s "/home/lionel/code/fraiseql-validators"
-   0.006990444s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint: fingerprint dirty for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { name_inferred: true, ..: lib_target("fraiseql_validators", ["lib"], "/home/lionel/code/fraiseql-validators/src/lib.rs", Edition2021) }
-   0.006994425s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(9) }
-   0.007063677s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="contact"}: cargo::core::compiler::fingerprint: fingerprint dirty for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "contact", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/contact.rs", Edition2021) }
-   0.007067349s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="contact"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(0) }
-   0.007138918s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="contract"}: cargo::core::compiler::fingerprint: fingerprint dirty for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "contract", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/contract.rs", Edition2021) }
-   0.007141810s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="contract"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(0) }
-   0.007200390s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="crate_exists"}: cargo::core::compiler::fingerprint: fingerprint dirty for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "crate_exists", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/crate_exists.rs", Edition2021) }
-   0.007203289s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="crate_exists"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(0) }
-   0.007300079s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="financial_banking"}: cargo::core::compiler::fingerprint: fingerprint error for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "financial_banking", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/financial_banking.rs", Edition2021) }
-   0.007303141s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="financial_banking"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/lionel/code/fraiseql-validators/target/debug/.fingerprint/fraiseql-validators-0af555a33e949dab/test-integration-test-financial_banking`
+   0.008268189s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint: dependency on `build_script_build` is newer than we are 1776424578.875124339s > 1776423615.047059629s "/home/lionel/code/fraiseql-validators"
+   0.008296895s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint: fingerprint dirty for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: false }/TargetInner { name_inferred: true, ..: lib_target("fraiseql_validators", ["lib"], "/home/lionel/code/fraiseql-validators/src/lib.rs", Edition2021) }
+   0.008304578s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(10) }
+   0.008485345s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint: dependency on `build_script_build` is newer than we are 1776424578.875124339s > 1776423615.047059629s "/home/lionel/code/fraiseql-validators"
+   0.008496823s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint: fingerprint dirty for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { name_inferred: true, ..: lib_target("fraiseql_validators", ["lib"], "/home/lionel/code/fraiseql-validators/src/lib.rs", Edition2021) }
+   0.008500394s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="fraiseql_validators"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(10) }
+   0.008567577s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="contact"}: cargo::core::compiler::fingerprint: fingerprint dirty for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "contact", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/contact.rs", Edition2021) }
+   0.008571273s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="contact"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(0) }
+   0.008628124s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="contract"}: cargo::core::compiler::fingerprint: fingerprint dirty for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "contract", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/contract.rs", Edition2021) }
+   0.008630699s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="contract"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(0) }
+   0.008686729s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="crate_exists"}: cargo::core::compiler::fingerprint: fingerprint dirty for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "crate_exists", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/crate_exists.rs", Edition2021) }
+   0.008690354s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="crate_exists"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(0) }
+   0.008746273s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="financial_banking"}: cargo::core::compiler::fingerprint: fingerprint error for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "financial_banking", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/financial_banking.rs", Edition2021) }
+   0.008749926s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="financial_banking"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/lionel/code/fraiseql-validators/target/debug/.fingerprint/fraiseql-validators-0af555a33e949dab/test-integration-test-financial_banking`
 
 Caused by:
     No such file or directory (os error 2)
@@ -53,11 +53,54 @@ Stack backtrace:
   24: <unknown>
   25: __libc_start_main
   26: <unknown>
-   0.011156283s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="helpers"}: cargo::core::compiler::fingerprint: fingerprint dirty for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "helpers", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/helpers.rs", Edition2021) }
-   0.011164704s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="helpers"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(0) }
-   0.011253385s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="validation_error"}: cargo::core::compiler::fingerprint: fingerprint dirty for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "validation_error", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/validation_error.rs", Edition2021) }
-   0.011256658s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="validation_error"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(0) }
+   0.012399762s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="financial_securities"}: cargo::core::compiler::fingerprint: fingerprint error for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "financial_securities", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/financial_securities.rs", Edition2021) }
+   0.012406341s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="financial_securities"}: cargo::core::compiler::fingerprint:     err: failed to read `/home/lionel/code/fraiseql-validators/target/debug/.fingerprint/fraiseql-validators-7b1e5f6edd0e72f9/test-integration-test-financial_securities`
+
+Caused by:
+    No such file or directory (os error 2)
+
+Stack backtrace:
+   0: cargo_util::paths::read_bytes
+   1: cargo_util::paths::read
+   2: cargo::core::compiler::fingerprint::_compare_old_fingerprint
+   3: cargo::core::compiler::fingerprint::prepare_target
+   4: cargo::core::compiler::compile
+   5: <cargo::core::compiler::build_runner::BuildRunner>::compile
+   6: cargo::ops::cargo_compile::compile_ws
+   7: cargo::ops::cargo_compile::compile_with_exec
+   8: cargo::ops::cargo_compile::compile
+   9: cargo::commands::check::exec
+  10: <cargo::cli::Exec>::exec
+  11: cargo::main
+  12: std::sys::backtrace::__rust_begin_short_backtrace::<fn(), ()>
+  13: std::rt::lang_start::<()>::{closure#0}
+  14: core::ops::function::impls::<impl core::ops::function::FnOnce<A> for &F>::call_once
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/core/src/ops/function.rs:287:21
+  15: std::panicking::catch_unwind::do_call
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:581:40
+  16: std::panicking::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:544:19
+  17: std::panic::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panic.rs:359:14
+  18: std::rt::lang_start_internal::{{closure}}
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/rt.rs:175:24
+  19: std::panicking::catch_unwind::do_call
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:581:40
+  20: std::panicking::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panicking.rs:544:19
+  21: std::panic::catch_unwind
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/panic.rs:359:14
+  22: std::rt::lang_start_internal
+             at /rustc/e408947bfd200af42db322daf0fadfe7e26d3bd1/library/std/src/rt.rs:171:5
+  23: main
+  24: <unknown>
+  25: __libc_start_main
+  26: <unknown>
+   0.012507219s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="helpers"}: cargo::core::compiler::fingerprint: fingerprint dirty for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "helpers", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/helpers.rs", Edition2021) }
+   0.012510801s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="helpers"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(0) }
+   0.012574345s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="validation_error"}: cargo::core::compiler::fingerprint: fingerprint dirty for fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)/Check { test: true }/TargetInner { kind: "test", name: "validation_error", benched: false, ..: with_path("/home/lionel/code/fraiseql-validators/tests/validation_error.rs", Edition2021) }
+   0.012577297s  INFO prepare_target{force=false package_id=fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators) target="validation_error"}: cargo::core::compiler::fingerprint:     dirty: UnitDependencyInfoChanged { unit: UnitIndex(0) }
     Checking fraiseql-validators v0.1.0 (/home/lionel/code/fraiseql-validators)
-error: could not compile `fraiseql-validators` (lib) due to 5 previous errors; 2 warnings emitted
+error: could not compile `fraiseql-validators` (lib) due to 5 previous errors; 1 warning emitted
 warning: build failed, waiting for other jobs to finish...
-error: could not compile `fraiseql-validators` (lib test) due to 5 previous errors; 2 warnings emitted
+error: could not compile `fraiseql-validators` (lib test) due to 5 previous errors; 1 warning emitted
