@@ -1,4 +1,4 @@
-use fraiseql_validators::identifiers::{Slug, Color, Locale, Semver, Vin};
+use fraiseql_validators::identifiers::{Color, Locale, Semver, Slug, Vin};
 
 #[test]
 fn test_slug_try_from_valid() {
@@ -39,7 +39,10 @@ fn test_slug_try_from_uppercase() {
     let result = Slug::try_from("Hello");
     assert!(result.is_err());
     let err = result.unwrap_err();
-    assert_eq!(err.reason, "contains invalid character (must be lowercase letters, digits, or hyphens)");
+    assert_eq!(
+        err.reason,
+        "contains invalid character (must be lowercase letters, digits, or hyphens)"
+    );
 }
 
 #[test]
@@ -221,7 +224,10 @@ fn test_semver_try_from_missing_patch() {
     let result = Semver::try_from("1.0");
     assert!(result.is_err());
     let err = result.unwrap_err();
-    assert_eq!(err.reason, "must have exactly 3 numeric parts separated by dots");
+    assert_eq!(
+        err.reason,
+        "must have exactly 3 numeric parts separated by dots"
+    );
 }
 
 #[test]
@@ -307,7 +313,10 @@ fn test_vin_try_from_invalid_char() {
     let result = Vin::try_from("1HGBH41JOMN109186");
     assert!(result.is_err());
     let err = result.unwrap_err();
-    assert_eq!(err.reason, "contains invalid character (must be A-H, J-N, P-R, S-Z, or 0-9, excluding I, O, Q)");
+    assert_eq!(
+        err.reason,
+        "contains invalid character (must be A-H, J-N, P-R, S-Z, or 0-9, excluding I, O, Q)"
+    );
 }
 
 #[test]

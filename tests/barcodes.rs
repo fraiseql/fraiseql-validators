@@ -1,4 +1,4 @@
-use fraiseql_validators::barcodes::{Ean8, UpcA, Ean13, Isbn13, Issn, Gtin14};
+use fraiseql_validators::barcodes::{Ean13, Ean8, Gtin14, Isbn13, Issn, UpcA};
 
 #[test]
 fn test_ean8_try_from_valid() {

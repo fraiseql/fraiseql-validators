@@ -96,7 +96,7 @@ fn read_iana_timezones(path: &Path) -> Vec<String> {
         .filter(|line| !line.starts_with('#') && !line.trim().is_empty())
         .filter_map(|line| {
             let parts: Vec<&str> = line.split('\t').collect();
-            parts.get(2).map(|s| s.to_string())
+            parts.get(2).map(std::string::ToString::to_string)
         })
         .collect::<Vec<_>>();
     // Add special timezones
@@ -114,12 +114,12 @@ fn emit_sorted_str_set(name: &str, values: &[String]) -> String {
 
     let mut code = format!("pub const {const_name}: &[&str] = &[\n");
     for value in &sorted {
-        let _ = write!(code, "    \"{value}\",\n");
+        let _ = writeln!(code, "    \"{value}\",");
     }
     code.push_str("];\n\n");
 
-    let _ = write!(code, "pub fn {fn_name}(s: &str) -> bool {{\n");
-    let _ = write!(code, "    {const_name}.binary_search(&s).is_ok()\n");
+    let _ = writeln!(code, "pub fn {fn_name}(s: &str) -> bool {{");
+    let _ = writeln!(code, "    {const_name}.binary_search(&s).is_ok()");
     code.push_str("}\n");
 
     code
