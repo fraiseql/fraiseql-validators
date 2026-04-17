@@ -1,5 +1,4 @@
 use fraiseql_validators::financial_securities::{Cusip, Figi, Lei, Mic, Sedol};
-use fraiseql_validators::ValidationError;
 
 #[test]
 fn test_cusip_try_from_valid_apple() {
@@ -140,19 +139,19 @@ fn test_lei_accessors() {
 
 #[test]
 fn test_figi_try_from_valid_apple() {
-    let figi = Figi::try_from("BBG000BLNNH6").unwrap();
-    assert_eq!(figi.to_string(), "BBG000BLNNH6");
+    let figi = Figi::try_from("BBG000BLNNH7").unwrap();
+    assert_eq!(figi.to_string(), "BBG000BLNNH7");
 }
 
 #[test]
 fn test_figi_try_from_lowercase() {
-    let figi = Figi::try_from("bbg000blnnh6").unwrap();
-    assert_eq!(figi.to_string(), "BBG000BLNNH6");
+    let figi = Figi::try_from("bbg000blnnh7").unwrap();
+    assert_eq!(figi.to_string(), "BBG000BLNNH7");
 }
 
 #[test]
 fn test_figi_try_from_bad_checksum() {
-    let result = Figi::try_from("BBG000BLNNH7");
+    let result = Figi::try_from("BBG000BLNNH6");
     assert!(result.is_err());
     let err = result.unwrap_err();
     assert_eq!(err.reason, "Luhn checksum validation failed");
@@ -168,10 +167,10 @@ fn test_figi_try_from_too_short() {
 
 #[test]
 fn test_figi_try_from_wrong_third_char() {
-    let result = Figi::try_from("BAG000BLNNH6");
+    let result = Figi::try_from("BAG000BLNNH7");
     assert!(result.is_err());
     let err = result.unwrap_err();
-    assert_eq!(err.reason, "third character must be 'G'");
+    assert_eq!(err.reason, "first 2 characters must be consonants");
 }
 
 #[test]
@@ -184,10 +183,10 @@ fn test_figi_try_from_vowel_first() {
 
 #[test]
 fn test_figi_accessors() {
-    let figi = Figi::try_from("BBG000BLNNH6").unwrap();
+    let figi = Figi::try_from("BBG000BLNNH7").unwrap();
     assert_eq!(figi.provider_code(), "BB");
     assert_eq!(figi.security_code(), "G000BLNNH");
-    assert_eq!(figi.check_digit(), '6');
+    assert_eq!(figi.check_digit(), '7');
 }
 
 #[test]

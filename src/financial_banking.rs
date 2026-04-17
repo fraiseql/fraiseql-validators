@@ -1,11 +1,11 @@
-use crate::checksum::luhn_valid;
+use crate::checksum::{isin_numeric_expansion, luhn_valid};
 use crate::ValidationError;
 use alloc::{string::String, vec::Vec};
 
 // Include generated currency codes
 include!(concat!(env!("OUT_DIR"), "/currency_codes.rs"));
 
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Iban(String);
 
 impl Iban {
@@ -89,7 +89,7 @@ impl core::convert::TryFrom<&str> for Iban {
 
         for c in rearranged.chars() {
             let digit = if c.is_ascii_digit() {
-                c.to_digit(10).unwrap()
+                c.to_digit(10).expect("IBAN digit invariant")
             } else if c.is_ascii_uppercase() {
                 // A=10, B=11, ..., Z=35
                 (c as u8 - b'A' + 10) as u32
@@ -124,7 +124,7 @@ impl core::convert::TryFrom<&str> for Iban {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Isin(String);
 
 impl Isin {
@@ -137,7 +137,10 @@ impl Isin {
     }
 
     pub fn check_digit(&self) -> char {
-        self.0.chars().nth(11).unwrap()
+        self.0
+            .chars()
+            .nth(11)
+            .expect("Isin invariant: always 12 chars")
     }
 }
 
@@ -145,19 +148,6 @@ impl core::fmt::Display for Isin {
     fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         write!(f, "{}", self.0)
     }
-}
-
-fn isin_numeric_expansion(s: &str) -> String {
-    let mut result = String::new();
-    for c in s.chars() {
-        if c.is_ascii_digit() {
-            result.push(c);
-        } else if c.is_ascii_uppercase() {
-            let num = (c as u8 - b'A' + 10) as u32;
-            result.push_str(&alloc::format!("{}", num));
-        }
-    }
-    result
 }
 
 impl core::convert::TryFrom<&str> for Isin {
@@ -226,12 +216,12 @@ impl core::convert::TryFrom<&str> for Isin {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct CurrencyCode([u8; 3]);
 
 impl CurrencyCode {
     pub fn as_str(&self) -> &str {
-        core::str::from_utf8(&self.0).unwrap()
+        core::str::from_utf8(&self.0).expect("CurrencyCode invariant: always valid UTF-8")
     }
 }
 
@@ -282,7 +272,7 @@ impl core::convert::TryFrom<&str> for CurrencyCode {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct SwiftBic(String);
 
 impl SwiftBic {

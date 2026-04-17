@@ -16,9 +16,18 @@ identifiers = []
 geographic = []
 network = []
 
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = "deny"
+pedantic = "deny"
+cargo = "deny"
+nursery = "warn"
+
 [dependencies]
 regex-lite = "0.1"
-once_cell = { version = "1.0", features = ["alloc"], default-features = false }
+once_cell = { version = "1.0", features = ["alloc", "std"], default-features = false }
 
 [build-dependencies]
 # none

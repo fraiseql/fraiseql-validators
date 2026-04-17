@@ -1,25 +1,11 @@
-use crate::checksum::{luhn_valid, mod97_valid};
+use crate::checksum::{isin_numeric_expansion, luhn_valid};
 use crate::ValidationError;
 use alloc::{string::String, vec::Vec};
 
 // Include generated MIC codes
 include!(concat!(env!("OUT_DIR"), "/mic_codes.rs"));
 
-pub(crate) fn isin_numeric_expansion(s: &str) -> String {
-    let mut result = String::new();
-    for c in s.chars() {
-        if c.is_ascii_digit() {
-            result.push(c);
-        } else if c.is_ascii_uppercase() {
-            let num = (c as u8 - b'A' + 10) as u32;
-            result.push((b'0' + (num / 10) as u8) as char);
-            result.push((b'0' + (num % 10) as u8) as char);
-        }
-    }
-    result
-}
-
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Cusip(String);
 
 impl Cusip {
@@ -32,7 +18,10 @@ impl Cusip {
     }
 
     pub fn check_digit(&self) -> char {
-        self.0.chars().nth(8).unwrap()
+        self.0
+            .chars()
+            .nth(8)
+            .expect("Cusip invariant: always 9 chars")
     }
 }
 
@@ -44,7 +33,7 @@ impl core::fmt::Display for Cusip {
 
 fn cusip_char_value(c: char) -> Option<u32> {
     match c {
-        '0'..='9' => Some(c.to_digit(10).unwrap()),
+        '0'..='9' => Some(c.to_digit(10).expect("Digit char invariant")),
         'A'..='Z' => Some(10 + (c as u32 - 'A' as u32)),
         '*' => Some(36),
         '@' => Some(37),
@@ -103,7 +92,12 @@ impl core::convert::TryFrom<&str> for Cusip {
 
         // Check check digit
         let expected_check = cusip_check_digit(&upper[..8]);
-        let actual_check = upper.chars().nth(8).unwrap().to_digit(10).unwrap() as u8;
+        let actual_check = upper
+            .chars()
+            .nth(8)
+            .expect("Cusip invariant: always 9 chars")
+            .to_digit(10)
+            .expect("Cusip invariant: check digit is digit") as u8;
 
         if expected_check != actual_check {
             return Err(ValidationError {
@@ -117,12 +111,15 @@ impl core::convert::TryFrom<&str> for Cusip {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Sedol(String);
 
 impl Sedol {
     pub fn check_digit(&self) -> char {
-        self.0.chars().nth(6).unwrap()
+        self.0
+            .chars()
+            .nth(6)
+            .expect("Sedol invariant: always 7 chars")
     }
 }
 
@@ -134,7 +131,7 @@ impl core::fmt::Display for Sedol {
 
 fn sedol_char_value(c: char) -> Option<u32> {
     match c {
-        '0'..='9' => Some(c.to_digit(10).unwrap()),
+        '0'..='9' => Some(c.to_digit(10).expect("Digit char invariant")),
         'B' => Some(11),
         'C' => Some(12),
         'D' => Some(13),
@@ -197,8 +194,8 @@ impl core::convert::TryFrom<&str> for Sedol {
         let chars: Vec<char> = upper.chars().collect();
 
         // Check first 6 characters are valid SEDOL chars (no vowels)
-        for i in 0..6 {
-            if sedol_char_value(chars[i]).is_none() {
+        for &c in &chars[0..6] {
+            if sedol_char_value(c).is_none() {
                 return Err(ValidationError {
                     type_name: "Sedol",
                     input: String::from(value),
@@ -218,7 +215,9 @@ impl core::convert::TryFrom<&str> for Sedol {
 
         // Check check digit
         let expected_check = sedol_check_digit(&upper[..6]);
-        let actual_check = chars[6].to_digit(10).unwrap() as u8;
+        let actual_check = chars[6]
+            .to_digit(10)
+            .expect("Sedol invariant: last char is digit") as u8;
 
         if expected_check != actual_check {
             return Err(ValidationError {
@@ -232,7 +231,7 @@ impl core::convert::TryFrom<&str> for Sedol {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Lei(String);
 
 impl Lei {
@@ -279,8 +278,8 @@ impl core::convert::TryFrom<&str> for Lei {
         let chars: Vec<char> = upper.chars().collect();
 
         // First 18 characters must be alphanumeric
-        for i in 0..18 {
-            if !chars[i].is_ascii_alphanumeric() {
+        for &c in &chars[0..18] {
+            if !c.is_ascii_alphanumeric() {
                 return Err(ValidationError {
                     type_name: "Lei",
                     input: String::from(value),
@@ -290,8 +289,8 @@ impl core::convert::TryFrom<&str> for Lei {
         }
 
         // Last 2 characters must be digits
-        for i in 18..20 {
-            if !chars[i].is_ascii_digit() {
+        for &c in &chars[18..20] {
+            if !c.is_ascii_digit() {
                 return Err(ValidationError {
                     type_name: "Lei",
                     input: String::from(value),
@@ -301,37 +300,33 @@ impl core::convert::TryFrom<&str> for Lei {
         }
 
         // Check MOD-97 validation
-        // Rearrange: move last 2 chars to front
-        let mut rearranged = String::from(&upper[18..]);
-        rearranged.push_str(&upper[..18]);
-        let mut remainder = 0u32;
-
-        for c in rearranged.chars() {
-            let digit = if c.is_ascii_digit() {
-                c.to_digit(10).unwrap()
-            } else if c.is_ascii_uppercase() {
-                // A=10, B=11, ..., Z=35
-                (c as u8 - b'A' + 10) as u32
+        let mut numeric = String::with_capacity(40);
+        for (i, &c) in chars.iter().enumerate() {
+            if i >= 18 {
+                numeric.push('0');
+                numeric.push('0');
+            } else if c.is_ascii_digit() {
+                numeric.push('0');
+                numeric.push(c);
             } else {
-                return Err(ValidationError {
-                    type_name: "Lei",
-                    input: String::from(value),
-                    reason: "invalid character in LEI",
-                });
-            };
-
-            // For 2-digit numbers (letters), we need to process each digit
-            if digit >= 10 {
-                // First digit
-                remainder = (remainder * 10 + digit / 10) % 97;
-                // Second digit
-                remainder = (remainder * 10 + digit % 10) % 97;
-            } else {
-                remainder = (remainder * 10 + digit) % 97;
+                let num = 10 + (c as u8 - b'A');
+                numeric.push((b'0' + num / 10) as char);
+                numeric.push((b'0' + num % 10) as char);
             }
         }
-
-        if remainder != 1 {
+        let mut remainder = 0u32;
+        for c in numeric.chars() {
+            let digit = c
+                .to_digit(10)
+                .expect("LEI numeric expansion invariant: all chars are digits");
+            remainder = (remainder * 10 + digit) % 97;
+        }
+        let expected_check = if remainder == 0 { 98 } else { 98 - remainder };
+        let actual_check_str = &upper[18..];
+        let actual_check: u32 = actual_check_str
+            .parse()
+            .expect("LEI invariant: last 2 chars are digits");
+        if expected_check != actual_check {
             return Err(ValidationError {
                 type_name: "Lei",
                 input: String::from(value),
@@ -343,7 +338,7 @@ impl core::convert::TryFrom<&str> for Lei {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Figi(String);
 
 impl Figi {
@@ -356,7 +351,10 @@ impl Figi {
     }
 
     pub fn check_digit(&self) -> char {
-        self.0.chars().nth(11).unwrap()
+        self.0
+            .chars()
+            .nth(11)
+            .expect("Figi invariant: always 12 chars")
     }
 }
 
@@ -393,15 +391,6 @@ impl core::convert::TryFrom<&str> for Figi {
         let upper = value.to_uppercase();
         let chars: Vec<char> = upper.chars().collect();
 
-        // Third character must be 'G'
-        if chars[2] != 'G' {
-            return Err(ValidationError {
-                type_name: "Figi",
-                input: String::from(value),
-                reason: "third character must be 'G'",
-            });
-        }
-
         // First 2 characters must be consonants
         if !figi_consonant(chars[0]) || !figi_consonant(chars[1]) {
             return Err(ValidationError {
@@ -411,9 +400,18 @@ impl core::convert::TryFrom<&str> for Figi {
             });
         }
 
+        // Third character must be 'G'
+        if chars[2] != 'G' {
+            return Err(ValidationError {
+                type_name: "Figi",
+                input: String::from(value),
+                reason: "third character must be 'G'",
+            });
+        }
+
         // Characters 3-10 must be alphanumeric
-        for i in 3..11 {
-            if !chars[i].is_ascii_alphanumeric() {
+        for &c in &chars[3..11] {
+            if !c.is_ascii_alphanumeric() {
                 return Err(ValidationError {
                     type_name: "Figi",
                     input: String::from(value),
@@ -445,12 +443,12 @@ impl core::convert::TryFrom<&str> for Figi {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Mic([u8; 4]);
 
 impl Mic {
     pub fn as_str(&self) -> &str {
-        core::str::from_utf8(&self.0).unwrap()
+        core::str::from_utf8(&self.0).expect("Mic invariant: always valid UTF-8")
     }
 }
 

@@ -1,3 +1,5 @@
+use alloc::string::String;
+
 /// Luhn algorithm validator for check digits
 pub fn luhn_valid(s: &str) -> bool {
     let mut sum = 0;
@@ -40,6 +42,21 @@ pub fn mod97_valid(s: &str) -> bool {
     }
 
     remainder == 1
+}
+
+/// Numeric expansion for ISIN characters (A-Z -> 10-35 as two digits)
+pub fn isin_numeric_expansion(s: &str) -> String {
+    let mut result = String::new();
+    for c in s.chars() {
+        if c.is_ascii_digit() {
+            result.push(c);
+        } else if c.is_ascii_uppercase() {
+            let num = (c as u8 - b'A' + 10) as u32;
+            result.push((b'0' + (num / 10) as u8) as char);
+            result.push((b'0' + (num % 10) as u8) as char);
+        }
+    }
+    result
 }
 
 #[cfg(test)]

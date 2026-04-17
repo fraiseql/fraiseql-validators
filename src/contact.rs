@@ -1,17 +1,33 @@
+//! Validation for contact information types.
+//!
+//! This module provides validators for email addresses, E.164 phone numbers,
+//! and domain names.
+
 use crate::ValidationError;
 use alloc::string::String;
+use once_cell::sync::Lazy;
 use regex_lite::Regex;
 
-#[derive(Debug)]
+static EMAIL_REGEX: Lazy<Regex> = Lazy::new(|| {
+    Regex::new(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$").unwrap()
+});
+
+#[derive(Clone, Debug)]
 pub struct Email(String);
 
 impl Email {
     pub fn local(&self) -> &str {
-        self.0.split('@').next().unwrap()
+        self.0
+            .split('@')
+            .next()
+            .expect("Email invariant: always contains '@'")
     }
 
     pub fn domain(&self) -> &str {
-        self.0.split('@').nth(1).unwrap()
+        self.0
+            .split('@')
+            .nth(1)
+            .expect("Email invariant: always contains '@'")
     }
 
     pub fn belongs_to_domain(&self, domain: &str) -> bool {
@@ -45,8 +61,7 @@ impl core::convert::TryFrom<&str> for Email {
             });
         }
 
-        let email_regex = Regex::new(r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$").unwrap();
-        if !email_regex.is_match(value) {
+        if !EMAIL_REGEX.is_match(value) {
             return Err(ValidationError {
                 type_name: "Email",
                 input: String::from(value),
@@ -78,7 +93,13 @@ impl PartialEq for Email {
 
 impl Eq for Email {}
 
-#[derive(Debug)]
+impl core::hash::Hash for Email {
+    fn hash<H: core::hash::Hasher>(&self, state: &mut H) {
+        self.0.to_lowercase().hash(state);
+    }
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct PhoneE164(String);
 
 impl PhoneE164 {
@@ -147,7 +168,7 @@ fn is_valid_domain_label(label: &str) -> bool {
     label.chars().all(|c| c.is_ascii_alphanumeric() || c == '-')
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct DomainName(String);
 
 impl DomainName {
