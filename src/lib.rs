@@ -54,8 +54,8 @@ pub mod barcodes;
 #[cfg(feature = "identifiers")]
 pub mod identifiers;
 
-#[cfg(feature = "geographic")]
-pub mod geographic;
-
 #[cfg(feature = "network")]
 pub mod network;
+
+#[cfg(feature = "geographic")]
+pub mod geographic;

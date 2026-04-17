@@ -1,0 +1,925 @@
+%%
+Type: language
+Subtag: aa
+Description: Afar
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ab
+Description: Abkhazian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ae
+Description: Avestan
+Added: 2005-10-16
+%%
+Type: language
+Subtag: af
+Description: Afrikaans
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ak
+Description: Akan
+Added: 2005-10-16
+%%
+Type: language
+Subtag: am
+Description: Amharic
+Added: 2005-10-16
+%%
+Type: language
+Subtag: an
+Description: Aragonese
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ar
+Description: Arabic
+Added: 2005-10-16
+%%
+Type: language
+Subtag: as
+Description: Assamese
+Added: 2005-10-16
+%%
+Type: language
+Subtag: av
+Description: Avaric
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ay
+Description: Aymara
+Added: 2005-10-16
+%%
+Type: language
+Subtag: az
+Description: Azerbaijani
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ba
+Description: Bashkir
+Added: 2005-10-16
+%%
+Type: language
+Subtag: be
+Description: Belarusian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: bg
+Description: Bulgarian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: bh
+Description: Bihari languages
+Added: 2005-10-16
+%%
+Type: language
+Subtag: bi
+Description: Bislama
+Added: 2005-10-16
+%%
+Type: language
+Subtag: bm
+Description: Bambara
+Added: 2005-10-16
+%%
+Type: language
+Subtag: bn
+Description: Bengali
+Added: 2005-10-16
+%%
+Type: language
+Subtag: bo
+Description: Tibetan
+Added: 2005-10-16
+%%
+Type: language
+Subtag: br
+Description: Breton
+Added: 2005-10-16
+%%
+Type: language
+Subtag: bs
+Description: Bosnian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ca
+Description: Catalan
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ce
+Description: Chechen
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ch
+Description: Chamorro
+Added: 2005-10-16
+%%
+Type: language
+Subtag: co
+Description: Corsican
+Added: 2005-10-16
+%%
+Type: language
+Subtag: cr
+Description: Cree
+Added: 2005-10-16
+%%
+Type: language
+Subtag: cs
+Description: Czech
+Added: 2005-10-16
+%%
+Type: language
+Subtag: cu
+Description: Church Slavic
+Added: 2005-10-16
+%%
+Type: language
+Subtag: cv
+Description: Chuvash
+Added: 2005-10-16
+%%
+Type: language
+Subtag: cy
+Description: Welsh
+Added: 2005-10-16
+%%
+Type: language
+Subtag: da
+Description: Danish
+Added: 2005-10-16
+%%
+Type: language
+Subtag: de
+Description: German
+Added: 2005-10-16
+%%
+Type: language
+Subtag: dv
+Description: Divehi
+Added: 2005-10-16
+%%
+Type: language
+Subtag: dz
+Description: Dzongkha
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ee
+Description: Ewe
+Added: 2005-10-16
+%%
+Type: language
+Subtag: el
+Description: Modern Greek (1453-)
+Added: 2005-10-16
+%%
+Type: language
+Subtag: en
+Description: English
+Added: 2005-10-16
+%%
+Type: language
+Subtag: eo
+Description: Esperanto
+Added: 2005-10-16
+%%
+Type: language
+Subtag: es
+Description: Spanish
+Added: 2005-10-16
+%%
+Type: language
+Subtag: et
+Description: Estonian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: eu
+Description: Basque
+Added: 2005-10-16
+%%
+Type: language
+Subtag: fa
+Description: Persian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ff
+Description: Fulah
+Added: 2005-10-16
+%%
+Type: language
+Subtag: fi
+Description: Finnish
+Added: 2005-10-16
+%%
+Type: language
+Subtag: fj
+Description: Fijian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: fo
+Description: Faroese
+Added: 2005-10-16
+%%
+Type: language
+Subtag: fr
+Description: French
+Added: 2005-10-16
+%%
+Type: language
+Subtag: fra
+Description: French
+Added: 2005-10-16
+%%
+Type: language
+Subtag: fy
+Description: Western Frisian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ga
+Description: Irish
+Added: 2005-10-16
+%%
+Type: language
+Subtag: gd
+Description: Scottish Gaelic
+Added: 2005-10-16
+%%
+Type: language
+Subtag: gl
+Description: Galician
+Added: 2005-10-16
+%%
+Type: language
+Subtag: gn
+Description: Guarani
+Added: 2005-10-16
+%%
+Type: language
+Subtag: gu
+Description: Gujarati
+Added: 2005-10-16
+%%
+Type: language
+Subtag: gv
+Description: Manx
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ha
+Description: Hausa
+Added: 2005-10-16
+%%
+Type: language
+Subtag: he
+Description: Hebrew
+Added: 2005-10-16
+%%
+Type: language
+Subtag: hi
+Description: Hindi
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ho
+Description: Hiri Motu
+Added: 2005-10-16
+%%
+Type: language
+Subtag: hr
+Description: Croatian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ht
+Description: Haitian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: hu
+Description: Hungarian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: hy
+Description: Armenian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: hz
+Description: Herero
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ia
+Description: Interlingua (International Auxiliary Language Association)
+Added: 2005-10-16
+%%
+Type: language
+Subtag: id
+Description: Indonesian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ie
+Description: Interlingue
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ig
+Description: Igbo
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ii
+Description: Sichuan Yi
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ik
+Description: Inupiaq
+Added: 2005-10-16
+%%
+Type: language
+Subtag: io
+Description: Ido
+Added: 2005-10-16
+%%
+Type: language
+Subtag: is
+Description: Icelandic
+Added: 2005-10-16
+%%
+Type: language
+Subtag: it
+Description: Italian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: iu
+Description: Inuktitut
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ja
+Description: Japanese
+Added: 2005-10-16
+%%
+Type: language
+Subtag: jv
+Description: Javanese
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ka
+Description: Georgian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: kg
+Description: Kongo
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ki
+Description: Kikuyu
+Added: 2005-10-16
+%%
+Type: language
+Subtag: kj
+Description: Kuanyama
+Added: 2005-10-16
+%%
+Type: language
+Subtag: kk
+Description: Kazakh
+Added: 2005-10-16
+%%
+Type: language
+Subtag: kl
+Description: Kalaallisut
+Added: 2005-10-16
+%%
+Type: language
+Subtag: km
+Description: Central Khmer
+Added: 2005-10-16
+%%
+Type: language
+Subtag: kn
+Description: Kannada
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ko
+Description: Korean
+Added: 2005-10-16
+%%
+Type: language
+Subtag: kr
+Description: Kanuri
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ks
+Description: Kashmiri
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ku
+Description: Kurdish
+Added: 2005-10-16
+%%
+Type: language
+Subtag: kv
+Description: Komi
+Added: 2005-10-16
+%%
+Type: language
+Subtag: kw
+Description: Cornish
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ky
+Description: Kirghiz
+Added: 2005-10-16
+%%
+Type: language
+Subtag: la
+Description: Latin
+Added: 2005-10-16
+%%
+Type: language
+Subtag: lb
+Description: Luxembourgish
+Added: 2005-10-16
+%%
+Type: language
+Subtag: lg
+Description: Ganda
+Added: 2005-10-16
+%%
+Type: language
+Subtag: li
+Description: Limburgan
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ln
+Description: Lingala
+Added: 2005-10-16
+%%
+Type: language
+Subtag: lo
+Description: Lao
+Added: 2005-10-16
+%%
+Type: language
+Subtag: lt
+Description: Lithuanian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: lu
+Description: Luba-Katanga
+Added: 2005-10-16
+%%
+Type: language
+Subtag: lv
+Description: Latvian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: mg
+Description: Malagasy
+Added: 2005-10-16
+%%
+Type: language
+Subtag: mh
+Description: Marshallese
+Added: 2005-10-16
+%%
+Type: language
+Subtag: mi
+Description: Maori
+Added: 2005-10-16
+%%
+Type: language
+Subtag: mk
+Description: Macedonian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ml
+Description: Malayalam
+Added: 2005-10-16
+%%
+Type: language
+Subtag: mn
+Description: Mongolian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: mr
+Description: Marathi
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ms
+Description: Malay (macrolanguage)
+Added: 2005-10-16
+%%
+Type: language
+Subtag: mt
+Description: Maltese
+Added: 2005-10-16
+%%
+Type: language
+Subtag: my
+Description: Burmese
+Added: 2005-10-16
+%%
+Type: language
+Subtag: na
+Description: Nauru
+Added: 2005-10-16
+%%
+Type: language
+Subtag: nb
+Description: Norwegian Bokmål
+Added: 2005-10-16
+%%
+Type: language
+Subtag: nd
+Description: North Ndebele
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ne
+Description: Nepali (macrolanguage)
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ng
+Description: Ndonga
+Added: 2005-10-16
+%%
+Type: language
+Subtag: nl
+Description: Dutch
+Added: 2005-10-16
+%%
+Type: language
+Subtag: nn
+Description: Norwegian Nynorsk
+Added: 2005-10-16
+%%
+Type: language
+Subtag: no
+Description: Norwegian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: nr
+Description: South Ndebele
+Added: 2005-10-16
+%%
+Type: language
+Subtag: nv
+Description: Navajo
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ny
+Description: Nyanja
+Added: 2005-10-16
+%%
+Type: language
+Subtag: oc
+Description: Occitan (post 1500)
+Added: 2005-10-16
+%%
+Type: language
+Subtag: oj
+Description: Ojibwe
+Added: 2005-10-16
+%%
+Type: language
+Subtag: om
+Description: Oromo
+Added: 2005-10-16
+%%
+Type: language
+Subtag: or
+Description: Oriya (macrolanguage)
+Added: 2005-10-16
+%%
+Type: language
+Subtag: os
+Description: Ossetian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: pa
+Description: Panjabi
+Added: 2005-10-16
+%%
+Type: language
+Subtag: pi
+Description: Pali
+Added: 2005-10-16
+%%
+Type: language
+Subtag: pl
+Description: Polish
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ps
+Description: Pushto
+Added: 2005-10-16
+%%
+Type: language
+Subtag: pt
+Description: Portuguese
+Added: 2005-10-16
+%%
+Type: language
+Subtag: qu
+Description: Quechua
+Added: 2005-10-16
+%%
+Type: language
+Subtag: rm
+Description: Romansh
+Added: 2005-10-16
+%%
+Type: language
+Subtag: rn
+Description: Rundi
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ro
+Description: Romanian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ru
+Description: Russian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: rw
+Description: Kinyarwanda
+Added: 2005-10-16
+%%
+Type: language
+Subtag: sa
+Description: Sanskrit
+Added: 2005-10-16
+%%
+Type: language
+Subtag: sc
+Description: Sardinian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: sd
+Description: Sindhi
+Added: 2005-10-16
+%%
+Type: language
+Subtag: se
+Description: Northern Sami
+Added: 2005-10-16
+%%
+Type: language
+Subtag: sg
+Description: Sango
+Added: 2005-10-16
+%%
+Type: language
+Subtag: si
+Description: Sinhala
+Added: 2005-10-16
+%%
+Type: language
+Subtag: sk
+Description: Slovak
+Added: 2005-10-16
+%%
+Type: language
+Subtag: sl
+Description: Slovenian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: sm
+Description: Samoan
+Added: 2005-10-16
+%%
+Type: language
+Subtag: sn
+Description: Shona
+Added: 2005-10-16
+%%
+Type: language
+Subtag: so
+Description: Somali
+Added: 2005-10-16
+%%
+Type: language
+Subtag: sq
+Description: Albanian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: sr
+Description: Serbian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ss
+Description: Swati
+Added: 2005-10-16
+%%
+Type: language
+Subtag: st
+Description: Southern Sotho
+Added: 2005-10-16
+%%
+Type: language
+Subtag: su
+Description: Sundanese
+Added: 2005-10-16
+%%
+Type: language
+Subtag: sv
+Description: Swedish
+Added: 2005-10-16
+%%
+Type: language
+Subtag: sw
+Description: Swahili (macrolanguage)
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ta
+Description: Tamil
+Added: 2005-10-16
+%%
+Type: language
+Subtag: te
+Description: Telugu
+Added: 2005-10-16
+%%
+Type: language
+Subtag: tg
+Description: Tajik
+Added: 2005-10-16
+%%
+Type: language
+Subtag: th
+Description: Thai
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ti
+Description: Tigrinya
+Added: 2005-10-16
+%%
+Type: language
+Subtag: tk
+Description: Turkmen
+Added: 2005-10-16
+%%
+Type: language
+Subtag: tl
+Description: Tagalog
+Added: 2005-10-16
+%%
+Type: language
+Subtag: tn
+Description: Tswana
+Added: 2005-10-16
+%%
+Type: language
+Subtag: to
+Description: Tonga (Tonga Islands)
+Added: 2005-10-16
+%%
+Type: language
+Subtag: tr
+Description: Turkish
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ts
+Description: Tsonga
+Added: 2005-10-16
+%%
+Type: language
+Subtag: tt
+Description: Tatar
+Added: 2005-10-16
+%%
+Type: language
+Subtag: tw
+Description: Twi
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ty
+Description: Tahitian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ug
+Description: Uighur
+Added: 2005-10-16
+%%
+Type: language
+Subtag: uk
+Description: Ukrainian
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ur
+Description: Urdu
+Added: 2005-10-16
+%%
+Type: language
+Subtag: uz
+Description: Uzbek
+Added: 2005-10-16
+%%
+Type: language
+Subtag: ve
+Description: Venda
+Added: 2005-10-16
+%%
+Type: language
+Subtag: vi
+Description: Vietnamese
+Added: 2005-10-16
+%%
+Type: language
+Subtag: vo
+Description: Volapük
+Added: 2005-10-16
+%%
+Type: language
+Subtag: wa
+Description: Walloon
+Added: 2005-10-16
+%%
+Type: language
+Subtag: wo
+Description: Wolof
+Added: 2005-10-16
+%%
+Type: language
+Subtag: xh
+Description: Xhosa
+Added: 2005-10-16
+%%
+Type: language
+Subtag: yi
+Description: Yiddish
+Added: 2005-10-16
+%%
+Type: language
+Subtag: yo
+Description: Yoruba
+Added: 2005-10-16
+%%
+Type: language
+Subtag: za
+Description: Zhuang
+Added: 2005-10-16
+%%
+Type: language
+Subtag: zh
+Description: Chinese
+Added: 2005-10-16
+%%
+Type: language
+Subtag: zu
+Description: Zulu
+Added: 2005-10-16
