@@ -1,4 +1,4 @@
-use alloc::{format, string::String, vec::Vec};
+use alloc::{format, string::{String, ToString}, vec, vec::Vec};
 use core::fmt;
 
 use crate::ValidationError;
@@ -14,6 +14,12 @@ pub struct MacAddressEui64([u8; 8]);
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Ipv4Address([u8; 4]);
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Ipv6Address([u16; 8]);
+
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Asn(u32);
 
 impl Port {
     pub const HTTP: Self = Self(80);
@@ -250,5 +256,273 @@ impl core::convert::TryFrom<&str> for Ipv4Address {
 impl fmt::Display for Ipv4Address {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}.{}.{}.{}", self.0[0], self.0[1], self.0[2], self.0[3])
+    }
+}
+
+impl Ipv6Address {
+    #[must_use]
+    pub const fn segments(&self) -> [u16; 8] {
+        self.0
+    }
+
+    #[must_use]
+    pub fn is_loopback(&self) -> bool {
+        self.0 == [0, 0, 0, 0, 0, 0, 0, 1]
+    }
+
+    #[must_use]
+    pub fn is_unspecified(&self) -> bool {
+        self.0 == [0, 0, 0, 0, 0, 0, 0, 0]
+    }
+}
+
+impl core::convert::TryFrom<&str> for Ipv6Address {
+    type Error = ValidationError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        // Check for malformed :: (like :::)
+        if value.contains(":::") || value.starts_with("::") && value.len() > 2 && value.chars().nth(2) == Some(':') || value.ends_with("::") && value.len() > 2 && value.chars().nth(value.len() - 3) == Some(':') {
+            return Err(ValidationError {
+                type_name: "Ipv6Address",
+                input: String::from(value),
+                reason: String::from("invalid IPv6 address format"),
+            });
+        }
+
+        let mut segments = [0u16; 8];
+        let mut segment_index = 0;
+
+        // Check for :: (double colon)
+        let parts: Vec<&str> = value.split("::").collect();
+        if parts.len() > 2 {
+            return Err(ValidationError {
+                type_name: "Ipv6Address",
+                input: String::from(value),
+                reason: String::from("invalid IPv6 address format"),
+            });
+        }
+
+        if parts.len() == 1 {
+            // No ::, parse all 8 segments
+            let segs: Vec<&str> = parts[0].split(':').collect();
+            if segs.len() != 8 {
+                return Err(ValidationError {
+                    type_name: "Ipv6Address",
+                    input: String::from(value),
+                    reason: String::from("invalid IPv6 address format"),
+                });
+            }
+            for (i, seg) in segs.iter().enumerate() {
+                segments[i] = u16::from_str_radix(seg, 16).map_err(|_| ValidationError {
+                    type_name: "Ipv6Address",
+                    input: String::from(value),
+                    reason: String::from("invalid hex digit"),
+                })?;
+            }
+        } else {
+            // Has ::, expand
+            let left_parts: Vec<&str> = if parts[0].is_empty() { Vec::new() } else { parts[0].split(':').collect() };
+            let right_parts: Vec<&str> = if parts[1].is_empty() { Vec::new() } else { parts[1].split(':').collect() };
+
+            // Check for invalid format (segments containing ':')
+            for seg in &left_parts {
+                if seg.contains(':') {
+                    return Err(ValidationError {
+                        type_name: "Ipv6Address",
+                        input: String::from(value),
+                        reason: String::from("invalid IPv6 address format"),
+                    });
+                }
+            }
+            for seg in &right_parts {
+                if seg.contains(':') {
+                    return Err(ValidationError {
+                        type_name: "Ipv6Address",
+                        input: String::from(value),
+                        reason: String::from("invalid IPv6 address format"),
+                    });
+                }
+            }
+
+            // Parse left segments
+            for seg in &left_parts {
+                segments[segment_index] = u16::from_str_radix(seg, 16).map_err(|_| ValidationError {
+                    type_name: "Ipv6Address",
+                    input: String::from(value),
+                    reason: String::from("invalid hex digit"),
+                })?;
+                segment_index += 1;
+            }
+
+            // Skip zeros for ::
+            let zeros_to_insert = 8 - left_parts.len() - right_parts.len();
+            segment_index += zeros_to_insert;
+
+            // Parse right segments
+            for seg in &right_parts {
+                segments[segment_index] = u16::from_str_radix(seg, 16).map_err(|_| ValidationError {
+                    type_name: "Ipv6Address",
+                    input: String::from(value),
+                    reason: String::from("invalid hex digit"),
+                })?;
+                segment_index += 1;
+            }
+        }
+
+        Ok(Self(segments))
+    }
+}
+
+impl fmt::Display for Ipv6Address {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        // RFC 5952 canonical form: longest run of zeros compressed with ::
+        let mut best_start = -1;
+        let mut best_len = 0;
+
+        let mut current_start = -1;
+        let mut current_len = 0;
+
+        for i in 0..8 {
+            if self.0[i] == 0 {
+                if current_start == -1 {
+                    current_start = i as i32;
+                }
+                current_len += 1;
+                if current_len > best_len {
+                    best_start = current_start;
+                    best_len = current_len;
+                }
+            } else {
+                current_start = -1;
+                current_len = 0;
+            }
+        }
+
+        // If best_len <= 1, don't compress
+        if best_len <= 1 {
+            return write!(
+                f,
+                "{:x}:{:x}:{:x}:{:x}:{:x}:{:x}:{:x}:{:x}",
+                self.0[0], self.0[1], self.0[2], self.0[3], self.0[4], self.0[5], self.0[6], self.0[7]
+            );
+        }
+
+        // Compress the best run
+        let mut result = String::new();
+        let mut i = 0;
+        while i < 8 {
+            if i == best_start as usize {
+                result.push_str("::");
+                i += best_len;
+            } else {
+                if !result.is_empty() && !result.ends_with(':') {
+                    result.push(':');
+                }
+                result.push_str(&format!("{:x}", self.0[i]));
+                i += 1;
+            }
+        }
+
+        // Handle special cases
+        if result.starts_with("::") && result.len() > 2 {
+            // Already good
+        } else if result.ends_with(':') && result != ":" {
+            // Remove trailing :
+            result.pop();
+        }
+
+        write!(f, "{}", result)
+    }
+}
+
+impl Asn {
+    #[must_use]
+    pub const fn value(&self) -> u32 {
+        self.0
+    }
+
+    #[must_use]
+    pub fn is_private(&self) -> bool {
+        // 64512–65534
+        (64512..=65534).contains(&self.0) ||
+        // 4200000000–4294967294
+        (4_200_000_000..=4_294_967_294).contains(&self.0)
+    }
+
+    #[must_use]
+    pub const fn is_reserved(&self) -> bool {
+        self.0 == 0
+    }
+
+    #[must_use]
+    pub fn to_dotted(&self) -> String {
+        let high = self.0 / 65536;
+        let low = self.0 % 65536;
+        format!("{}.{}", high, low)
+    }
+}
+
+impl core::convert::TryFrom<&str> for Asn {
+    type Error = ValidationError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        if value.contains('.') {
+            // Dotted notation: high.low
+            let parts: Vec<&str> = value.split('.').collect();
+            if parts.len() != 2 {
+                return Err(ValidationError {
+                    type_name: "Asn",
+                    input: String::from(value),
+                    reason: String::from("invalid ASN format"),
+                });
+            }
+            let high: u32 = parts[0].parse().map_err(|_| ValidationError {
+                type_name: "Asn",
+                input: String::from(value),
+                reason: String::from("invalid number"),
+            })?;
+            let low: u32 = parts[1].parse().map_err(|_| ValidationError {
+                type_name: "Asn",
+                input: String::from(value),
+                reason: String::from("invalid number"),
+            })?;
+            if high > 65535 || low > 65535 {
+                return Err(ValidationError {
+                    type_name: "Asn",
+                    input: String::from(value),
+                    reason: String::from("dotted ASN parts must be <= 65535"),
+                });
+            }
+            let asn = high * 65536 + low;
+            if asn == 0 {
+                return Err(ValidationError {
+                    type_name: "Asn",
+                    input: String::from(value),
+                    reason: String::from("ASN 0 is reserved"),
+                });
+            }
+            Ok(Asn(asn))
+        } else {
+            // Plain decimal
+            let asn: u32 = value.parse().map_err(|_| ValidationError {
+                type_name: "Asn",
+                input: String::from(value),
+                reason: String::from("invalid number"),
+            })?;
+            if asn == 0 {
+                return Err(ValidationError {
+                    type_name: "Asn",
+                    input: String::from(value),
+                    reason: String::from("ASN 0 is reserved"),
+                });
+            }
+            Ok(Asn(asn))
+        }
+    }
+}
+
+impl fmt::Display for Asn {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
     }
 }

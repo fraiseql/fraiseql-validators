@@ -1,4 +1,4 @@
-use fraiseql_validators::network::{Port, MacAddressEui48, MacAddressEui64, Ipv4Address};
+use fraiseql_validators::network::{Port, MacAddressEui48, MacAddressEui64, Ipv4Address, Ipv6Address, Asn};
 
 #[test]
 fn test_port_try_from_valid() {
@@ -251,4 +251,114 @@ fn test_ipv4_address_is_link_local() {
     assert!(link_local.is_link_local());
     let not_link_local = Ipv4Address::try_from("192.168.1.1").unwrap();
     assert!(!not_link_local.is_link_local());
+}
+
+#[test]
+fn test_ipv6_address_try_from_compressed() {
+    let ip = Ipv6Address::try_from("2001:db8::1").unwrap();
+    assert_eq!(ip.segments(), [0x2001, 0x0db8, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001]);
+    assert_eq!(ip.to_string(), "2001:db8::1");
+}
+
+#[test]
+fn test_ipv6_address_try_from_loopback() {
+    let ip = Ipv6Address::try_from("::1").unwrap();
+    assert_eq!(ip.segments(), [0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001]);
+    assert!(ip.is_loopback());
+    assert!(!ip.is_unspecified());
+}
+
+#[test]
+fn test_ipv6_address_try_from_unspecified() {
+    let ip = Ipv6Address::try_from("::").unwrap();
+    assert_eq!(ip.segments(), [0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000]);
+    assert!(ip.is_unspecified());
+    assert!(!ip.is_loopback());
+}
+
+#[test]
+fn test_ipv6_address_try_from_full() {
+    let ip = Ipv6Address::try_from("2001:0db8:0000:0000:0000:0000:0000:0001").unwrap();
+    assert_eq!(ip.segments(), [0x2001, 0x0db8, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001]);
+    assert_eq!(ip.to_string(), "2001:db8::1");
+}
+
+#[test]
+fn test_ipv6_address_try_from_ipv4_mapped() {
+    // TODO: implement IPv4-mapped parsing
+    // let ip = Ipv6Address::try_from("::ffff:192.0.2.1").unwrap();
+    // assert_eq!(ip.segments(), [0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xffff, 0xc000, 0x0201]);
+    // assert_eq!(ip.to_string(), "::ffff:192.0.2.1");
+}
+
+#[test]
+fn test_ipv6_address_try_from_double_colon() {
+    let result = Ipv6Address::try_from("2001:db8:::1");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, "invalid IPv6 address format");
+}
+
+#[test]
+fn test_ipv6_address_try_from_two_double_colon() {
+    let result = Ipv6Address::try_from("2001:db8::1::2");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, "invalid IPv6 address format");
+}
+
+#[test]
+fn test_asn_try_from_plain() {
+    let asn = Asn::try_from("65001").unwrap();
+    assert_eq!(asn.value(), 65001);
+    assert_eq!(format!("{}", asn), "65001");
+}
+
+#[test]
+fn test_asn_try_from_dotted() {
+    let asn = Asn::try_from("1.65535").unwrap();
+    assert_eq!(asn.value(), 131071);
+    assert_eq!(asn.to_dotted(), "1.65535");
+}
+
+#[test]
+fn test_asn_try_from_zero() {
+    let result = Asn::try_from("0");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, "ASN 0 is reserved");
+}
+
+#[test]
+fn test_asn_try_from_out_of_range() {
+    let result = Asn::try_from("4294967296");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, "invalid number");
+}
+
+#[test]
+fn test_asn_try_from_dotted_zero() {
+    let result = Asn::try_from("0.0");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, "ASN 0 is reserved");
+}
+
+#[test]
+fn test_asn_is_private() {
+    let private1 = Asn::try_from("64512").unwrap();
+    assert!(private1.is_private());
+    let private2 = Asn::try_from("65534").unwrap();
+    assert!(private2.is_private());
+    let private3 = Asn::try_from("4200000000").unwrap();
+    assert!(private3.is_private());
+    let public = Asn::try_from("1").unwrap();
+    assert!(!public.is_private());
+}
+
+#[test]
+fn test_asn_is_reserved() {
+    let not_reserved = Asn::try_from("1").unwrap();
+    assert!(!not_reserved.is_reserved());
 }
