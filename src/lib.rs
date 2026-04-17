@@ -28,6 +28,9 @@ pub mod contact;
 #[cfg(feature = "financial_banking")]
 pub mod financial_banking;
 
+#[cfg(feature = "financial_banking")]
+mod checksum;
+
 #[cfg(feature = "financial_securities")]
 pub mod financial_securities;
 
