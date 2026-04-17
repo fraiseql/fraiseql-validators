@@ -36,6 +36,11 @@ pub struct CountryCode([u8; 2]);
 
 impl CountryCode {
     /// Returns the country code as a string slice.
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the inner array is always valid ASCII.
+    #[must_use]
     pub fn as_str(&self) -> &str {
         core::str::from_utf8(&self.0).unwrap()
     }
@@ -62,7 +67,7 @@ impl core::convert::TryFrom<&str> for CountryCode {
         let upper = value.to_uppercase();
         let bytes = upper.as_bytes();
 
-        if !bytes.iter().all(|b| (*b).is_ascii_uppercase()) {
+        if !bytes.iter().all(u8::is_ascii_uppercase) {
             return Err(ValidationError {
                 type_name: "CountryCode",
                 input: String::from(value),
@@ -81,7 +86,7 @@ impl core::convert::TryFrom<&str> for CountryCode {
 
         let mut result = [0u8; 2];
         result.copy_from_slice(bytes);
-        Ok(CountryCode(result))
+        Ok(Self(result))
     }
 }
 
@@ -91,6 +96,11 @@ pub struct CountryCodeAlpha3([u8; 3]);
 
 impl CountryCodeAlpha3 {
     /// Returns the country code as a string slice.
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the inner array is always valid ASCII.
+    #[must_use]
     pub fn as_str(&self) -> &str {
         core::str::from_utf8(&self.0).unwrap()
     }
@@ -117,7 +127,7 @@ impl core::convert::TryFrom<&str> for CountryCodeAlpha3 {
         let upper = value.to_uppercase();
         let bytes = upper.as_bytes();
 
-        if !bytes.iter().all(|b| (*b).is_ascii_uppercase()) {
+        if !bytes.iter().all(u8::is_ascii_uppercase) {
             return Err(ValidationError {
                 type_name: "CountryCodeAlpha3",
                 input: String::from(value),
@@ -136,7 +146,7 @@ impl core::convert::TryFrom<&str> for CountryCodeAlpha3 {
 
         let mut result = [0u8; 3];
         result.copy_from_slice(bytes);
-        Ok(CountryCodeAlpha3(result))
+        Ok(Self(result))
     }
 }
 
@@ -146,7 +156,8 @@ pub struct LanguageCode(String);
 
 impl LanguageCode {
     /// Returns the primary language subtag.
-    pub fn primary(&self) -> &str {
+    #[must_use]
+    pub const fn primary(&self) -> &str {
         self.0.as_str()
     }
 }
@@ -196,7 +207,7 @@ impl core::convert::TryFrom<&str> for LanguageCode {
             });
         }
 
-        Ok(LanguageCode(lower))
+        Ok(Self(lower))
     }
 }
 
@@ -206,7 +217,8 @@ pub struct Latitude(f64);
 
 impl Latitude {
     /// Returns the latitude value in degrees.
-    pub fn degrees(&self) -> f64 {
+    #[must_use]
+    pub const fn degrees(&self) -> f64 {
         self.0
     }
 }
@@ -224,20 +236,20 @@ impl core::convert::TryFrom<f64> for Latitude {
         if !value.is_finite() {
             return Err(ValidationError {
                 type_name: "Latitude",
-                input: alloc::format!("{}", value),
+                input: alloc::format!("{value}"),
                 reason: String::from("must be a finite number"),
             });
         }
 
-        if value < -90.0 || value > 90.0 {
+        if !(-90.0..=90.0).contains(&value) {
             return Err(ValidationError {
                 type_name: "Latitude",
-                input: alloc::format!("{}", value),
+                input: alloc::format!("{value}"),
                 reason: String::from("must be in range [-90.0, 90.0]"),
             });
         }
 
-        Ok(Latitude(value))
+        Ok(Self(value))
     }
 }
 
@@ -245,14 +257,16 @@ impl core::convert::TryFrom<&str> for Latitude {
     type Error = ValidationError;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        match value.parse::<f64>() {
-            Ok(num) => Latitude::try_from(num),
-            Err(_) => Err(ValidationError {
-                type_name: "Latitude",
-                input: String::from(value),
-                reason: String::from("must be a valid number"),
-            }),
-        }
+        value.parse::<f64>().map_or_else(
+            |_| {
+                Err(ValidationError {
+                    type_name: "Latitude",
+                    input: String::from(value),
+                    reason: String::from("must be a valid number"),
+                })
+            },
+            Self::try_from,
+        )
     }
 }
 
@@ -262,7 +276,8 @@ pub struct Longitude(f64);
 
 impl Longitude {
     /// Returns the longitude value in degrees.
-    pub fn degrees(&self) -> f64 {
+    #[must_use]
+    pub const fn degrees(&self) -> f64 {
         self.0
     }
 }
@@ -280,20 +295,20 @@ impl core::convert::TryFrom<f64> for Longitude {
         if !value.is_finite() {
             return Err(ValidationError {
                 type_name: "Longitude",
-                input: alloc::format!("{}", value),
+                input: alloc::format!("{value}"),
                 reason: String::from("must be a finite number"),
             });
         }
 
-        if value < -180.0 || value > 180.0 {
+        if !(-180.0..=180.0).contains(&value) {
             return Err(ValidationError {
                 type_name: "Longitude",
-                input: alloc::format!("{}", value),
+                input: alloc::format!("{value}"),
                 reason: String::from("must be in range [-180.0, 180.0]"),
             });
         }
 
-        Ok(Longitude(value))
+        Ok(Self(value))
     }
 }
 
@@ -301,14 +316,16 @@ impl core::convert::TryFrom<&str> for Longitude {
     type Error = ValidationError;
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
-        match value.parse::<f64>() {
-            Ok(num) => Longitude::try_from(num),
-            Err(_) => Err(ValidationError {
-                type_name: "Longitude",
-                input: String::from(value),
-                reason: String::from("must be a valid number"),
-            }),
-        }
+        value.parse::<f64>().map_or_else(
+            |_| {
+                Err(ValidationError {
+                    type_name: "Longitude",
+                    input: String::from(value),
+                    reason: String::from("must be a valid number"),
+                })
+            },
+            Self::try_from,
+        )
     }
 }
 
@@ -321,16 +338,23 @@ pub struct PostalCode {
 
 impl PostalCode {
     /// Returns the country code (uppercase).
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the inner array is always valid ASCII.
+    #[must_use]
     pub fn country(&self) -> &str {
         core::str::from_utf8(&self.country).unwrap()
     }
 
     /// Returns the postal code.
+    #[must_use]
     pub fn code(&self) -> &str {
         &self.code
     }
 
     /// Checks if this postal code belongs to the given country.
+    #[must_use]
     pub fn belongs_to_country(&self, country: &str) -> bool {
         self.country() == country.to_uppercase()
     }
@@ -369,7 +393,7 @@ impl core::convert::TryFrom<&str> for PostalCode {
         let upper_country = country_str.to_uppercase();
         let country_bytes = upper_country.as_bytes();
 
-        if !country_bytes.iter().all(|b| (*b).is_ascii_uppercase()) {
+        if !country_bytes.iter().all(u8::is_ascii_uppercase) {
             return Err(ValidationError {
                 type_name: "PostalCode",
                 input: String::from(value),
@@ -406,14 +430,14 @@ impl core::convert::TryFrom<&str> for PostalCode {
             return Err(ValidationError {
                 type_name: "PostalCode",
                 input: String::from(value),
-                reason: alloc::format!("invalid postal code format for country {}", upper_country),
+                reason: alloc::format!("invalid postal code format for country {upper_country}"),
             });
         }
 
         let mut country = [0u8; 2];
         country.copy_from_slice(country_bytes);
 
-        Ok(PostalCode {
+        Ok(Self {
             country,
             code: normalized_code,
         })
@@ -426,6 +450,11 @@ pub struct IataAirportCode([u8; 3]);
 
 impl IataAirportCode {
     /// Returns the airport code as a string slice.
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the inner array is always valid ASCII.
+    #[must_use]
     pub fn as_str(&self) -> &str {
         core::str::from_utf8(&self.0).unwrap()
     }
@@ -452,7 +481,7 @@ impl core::convert::TryFrom<&str> for IataAirportCode {
         let upper = value.to_uppercase();
         let bytes = upper.as_bytes();
 
-        if !bytes.iter().all(|b| (*b).is_ascii_uppercase()) {
+        if !bytes.iter().all(u8::is_ascii_uppercase) {
             return Err(ValidationError {
                 type_name: "IataAirportCode",
                 input: String::from(value),
@@ -471,7 +500,7 @@ impl core::convert::TryFrom<&str> for IataAirportCode {
 
         let mut result = [0u8; 3];
         result.copy_from_slice(bytes);
-        Ok(IataAirportCode(result))
+        Ok(Self(result))
     }
 }
 
@@ -481,6 +510,11 @@ pub struct IcaoAirportCode([u8; 4]);
 
 impl IcaoAirportCode {
     /// Returns the airport code as a string slice.
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the inner array is always valid ASCII.
+    #[must_use]
     pub fn as_str(&self) -> &str {
         core::str::from_utf8(&self.0).unwrap()
     }
@@ -507,7 +541,10 @@ impl core::convert::TryFrom<&str> for IcaoAirportCode {
         let upper = value.to_uppercase();
         let bytes = upper.as_bytes();
 
-        if !bytes.iter().all(|b| (*b).is_ascii_uppercase() || (*b).is_ascii_digit()) {
+        if !bytes
+            .iter()
+            .all(|b| b.is_ascii_uppercase() || b.is_ascii_digit())
+        {
             return Err(ValidationError {
                 type_name: "IcaoAirportCode",
                 input: String::from(value),
@@ -526,7 +563,7 @@ impl core::convert::TryFrom<&str> for IcaoAirportCode {
 
         let mut result = [0u8; 4];
         result.copy_from_slice(bytes);
-        Ok(IcaoAirportCode(result))
+        Ok(Self(result))
     }
 }
 
@@ -536,6 +573,7 @@ pub struct IanaTimezone(String);
 
 impl IanaTimezone {
     /// Returns the timezone name as a string slice.
+    #[must_use]
     pub fn as_str(&self) -> &str {
         &self.0
     }
@@ -568,6 +606,6 @@ impl core::convert::TryFrom<&str> for IanaTimezone {
             });
         }
 
-        Ok(IanaTimezone(String::from(value)))
+        Ok(Self(String::from(value)))
     }
 }

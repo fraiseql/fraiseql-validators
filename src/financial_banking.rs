@@ -1,3 +1,8 @@
+//! Validation for financial banking types.
+//!
+//! This module provides validators for IBANs, ISINs, currency codes (ISO 4217),
+//! and SWIFT/BIC codes.
+
 use crate::checksum::{isin_numeric_expansion, luhn_valid};
 use crate::ValidationError;
 use alloc::{string::String, vec::Vec};
@@ -9,14 +14,17 @@ include!(concat!(env!("OUT_DIR"), "/currency_codes.rs"));
 pub struct Iban(String);
 
 impl Iban {
+    #[must_use]
     pub fn country(&self) -> &str {
         &self.0[..2]
     }
 
+    #[must_use]
     pub fn check_digits(&self) -> &str {
         &self.0[2..4]
     }
 
+    #[must_use]
     pub fn bban(&self) -> &str {
         &self.0[4..]
     }
@@ -92,7 +100,7 @@ impl core::convert::TryFrom<&str> for Iban {
                 c.to_digit(10).expect("IBAN digit invariant")
             } else if c.is_ascii_uppercase() {
                 // A=10, B=11, ..., Z=35
-                (c as u8 - b'A' + 10) as u32
+                u32::from(c as u8 - b'A' + 10)
             } else {
                 return Err(ValidationError {
                     type_name: "Iban",
@@ -120,7 +128,7 @@ impl core::convert::TryFrom<&str> for Iban {
             });
         }
 
-        Ok(Iban(upper))
+        Ok(Self(upper))
     }
 }
 
@@ -128,14 +136,22 @@ impl core::convert::TryFrom<&str> for Iban {
 pub struct Isin(String);
 
 impl Isin {
+    #[must_use]
     pub fn country(&self) -> &str {
         &self.0[..2]
     }
 
+    #[must_use]
     pub fn nsin(&self) -> &str {
         &self.0[2..11]
     }
 
+    /// Returns the check digit character.
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the constructor guarantees the ISIN is always 12 chars.
+    #[must_use]
     pub fn check_digit(&self) -> char {
         self.0
             .chars()
@@ -212,7 +228,7 @@ impl core::convert::TryFrom<&str> for Isin {
             });
         }
 
-        Ok(Isin(upper))
+        Ok(Self(upper))
     }
 }
 
@@ -220,6 +236,12 @@ impl core::convert::TryFrom<&str> for Isin {
 pub struct CurrencyCode([u8; 3]);
 
 impl CurrencyCode {
+    /// Returns the currency code as a string slice.
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the inner array is always valid UTF-8.
+    #[must_use]
     pub fn as_str(&self) -> &str {
         core::str::from_utf8(&self.0).expect("CurrencyCode invariant: always valid UTF-8")
     }
@@ -268,7 +290,7 @@ impl core::convert::TryFrom<&str> for CurrencyCode {
         let mut arr = [0u8; 3];
         arr.copy_from_slice(bytes);
 
-        Ok(CurrencyCode(arr))
+        Ok(Self(arr))
     }
 }
 
@@ -276,18 +298,22 @@ impl core::convert::TryFrom<&str> for CurrencyCode {
 pub struct SwiftBic(String);
 
 impl SwiftBic {
+    #[must_use]
     pub fn institution_code(&self) -> &str {
         &self.0[..4]
     }
 
+    #[must_use]
     pub fn country_code(&self) -> &str {
         &self.0[4..6]
     }
 
+    #[must_use]
     pub fn location_code(&self) -> &str {
         &self.0[6..8]
     }
 
+    #[must_use]
     pub fn branch_code(&self) -> Option<&str> {
         if self.0.len() == 11 {
             Some(&self.0[8..11])
@@ -373,6 +399,6 @@ impl core::convert::TryFrom<&str> for SwiftBic {
             }
         }
 
-        Ok(SwiftBic(upper))
+        Ok(Self(upper))
     }
 }

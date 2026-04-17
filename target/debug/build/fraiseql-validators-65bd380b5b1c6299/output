@@ -1,6 +1,0 @@
-cargo:rerun-if-changed=data/iso4217_currencies.csv
-cargo:rerun-if-changed=data/iso10383_mic.csv
-cargo:rerun-if-changed=data/iso3166_countries.csv
-cargo:rerun-if-changed=data/iana_language_subtags.txt
-cargo:rerun-if-changed=data/ourairports_airports.csv
-cargo:rerun-if-changed=data/iana_zone_tab.txt

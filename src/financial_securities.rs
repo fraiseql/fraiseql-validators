@@ -1,3 +1,8 @@
+//! Validation for financial securities types.
+//!
+//! This module provides validators for CUSIP, SEDOL, LEI, FIGI, and MIC
+//! (Market Identifier Code) identifiers.
+
 use crate::checksum::{isin_numeric_expansion, luhn_valid};
 use crate::ValidationError;
 use alloc::{string::String, vec::Vec};
@@ -9,14 +14,22 @@ include!(concat!(env!("OUT_DIR"), "/mic_codes.rs"));
 pub struct Cusip(String);
 
 impl Cusip {
+    #[must_use]
     pub fn issuer_code(&self) -> &str {
         &self.0[..6]
     }
 
+    #[must_use]
     pub fn issue_number(&self) -> &str {
         &self.0[6..8]
     }
 
+    /// Returns the check digit character.
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the constructor guarantees the CUSIP is always 9 chars.
+    #[must_use]
     pub fn check_digit(&self) -> char {
         self.0
             .chars()
@@ -31,7 +44,7 @@ impl core::fmt::Display for Cusip {
     }
 }
 
-fn cusip_char_value(c: char) -> Option<u32> {
+const fn cusip_char_value(c: char) -> Option<u32> {
     match c {
         '0'..='9' => Some(c.to_digit(10).expect("Digit char invariant")),
         'A'..='Z' => Some(10 + (c as u32 - 'A' as u32)),
@@ -42,6 +55,7 @@ fn cusip_char_value(c: char) -> Option<u32> {
     }
 }
 
+#[allow(clippy::cast_possible_truncation)] // result is always 0-9
 fn cusip_check_digit(s: &str) -> u8 {
     let mut sum = 0;
     let chars: Vec<char> = s.chars().collect();
@@ -92,6 +106,7 @@ impl core::convert::TryFrom<&str> for Cusip {
 
         // Check check digit
         let expected_check = cusip_check_digit(&upper[..8]);
+        #[allow(clippy::cast_possible_truncation)] // digit is 0-9
         let actual_check = upper
             .chars()
             .nth(8)
@@ -107,7 +122,7 @@ impl core::convert::TryFrom<&str> for Cusip {
             });
         }
 
-        Ok(Cusip(upper))
+        Ok(Self(upper))
     }
 }
 
@@ -115,6 +130,12 @@ impl core::convert::TryFrom<&str> for Cusip {
 pub struct Sedol(String);
 
 impl Sedol {
+    /// Returns the check digit character.
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the constructor guarantees the SEDOL is always 7 chars.
+    #[must_use]
     pub fn check_digit(&self) -> char {
         self.0
             .chars()
@@ -129,7 +150,7 @@ impl core::fmt::Display for Sedol {
     }
 }
 
-fn sedol_char_value(c: char) -> Option<u32> {
+const fn sedol_char_value(c: char) -> Option<u32> {
     match c {
         '0'..='9' => Some(c.to_digit(10).expect("Digit char invariant")),
         'B' => Some(11),
@@ -157,13 +178,14 @@ fn sedol_char_value(c: char) -> Option<u32> {
     }
 }
 
+#[allow(clippy::cast_possible_truncation)] // result is always 0-9
 fn sedol_check_digit(s: &str) -> u8 {
-    let weights = [1, 3, 1, 7, 3, 9, 1];
+    let weights: [u8; 7] = [1, 3, 1, 7, 3, 9, 1];
     let mut sum = 0;
 
     for (i, c) in s.chars().enumerate() {
         if let Some(value) = sedol_char_value(c) {
-            sum += value * weights[i] as u32;
+            sum += value * u32::from(weights[i]);
         }
     }
 
@@ -215,6 +237,7 @@ impl core::convert::TryFrom<&str> for Sedol {
 
         // Check check digit
         let expected_check = sedol_check_digit(&upper[..6]);
+        #[allow(clippy::cast_possible_truncation)] // digit is 0-9
         let actual_check = chars[6]
             .to_digit(10)
             .expect("Sedol invariant: last char is digit") as u8;
@@ -227,7 +250,7 @@ impl core::convert::TryFrom<&str> for Sedol {
             });
         }
 
-        Ok(Sedol(upper))
+        Ok(Self(upper))
     }
 }
 
@@ -235,14 +258,17 @@ impl core::convert::TryFrom<&str> for Sedol {
 pub struct Lei(String);
 
 impl Lei {
+    #[must_use]
     pub fn lou_code(&self) -> &str {
         &self.0[..4]
     }
 
+    #[must_use]
     pub fn entity_code(&self) -> &str {
         &self.0[4..18]
     }
 
+    #[must_use]
     pub fn check_digits(&self) -> &str {
         &self.0[18..]
     }
@@ -334,7 +360,7 @@ impl core::convert::TryFrom<&str> for Lei {
             });
         }
 
-        Ok(Lei(upper))
+        Ok(Self(upper))
     }
 }
 
@@ -342,14 +368,22 @@ impl core::convert::TryFrom<&str> for Lei {
 pub struct Figi(String);
 
 impl Figi {
+    #[must_use]
     pub fn provider_code(&self) -> &str {
         &self.0[..2]
     }
 
+    #[must_use]
     pub fn security_code(&self) -> &str {
         &self.0[2..11]
     }
 
+    /// Returns the check digit character.
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the constructor guarantees the FIGI is always 12 chars.
+    #[must_use]
     pub fn check_digit(&self) -> char {
         self.0
             .chars()
@@ -364,7 +398,7 @@ impl core::fmt::Display for Figi {
     }
 }
 
-fn figi_consonant(c: char) -> bool {
+const fn figi_consonant(c: char) -> bool {
     matches!(c, 'B'..='D' | 'F'..='H' | 'J'..='N' | 'P'..='T' | 'V'..='Z')
 }
 
@@ -439,7 +473,7 @@ impl core::convert::TryFrom<&str> for Figi {
             });
         }
 
-        Ok(Figi(upper))
+        Ok(Self(upper))
     }
 }
 
@@ -447,6 +481,12 @@ impl core::convert::TryFrom<&str> for Figi {
 pub struct Mic([u8; 4]);
 
 impl Mic {
+    /// Returns the MIC as a string slice.
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the inner array is always valid UTF-8.
+    #[must_use]
     pub fn as_str(&self) -> &str {
         core::str::from_utf8(&self.0).expect("Mic invariant: always valid UTF-8")
     }
@@ -495,6 +535,6 @@ impl core::convert::TryFrom<&str> for Mic {
         let mut arr = [0u8; 4];
         arr.copy_from_slice(bytes);
 
-        Ok(Mic(arr))
+        Ok(Self(arr))
     }
 }

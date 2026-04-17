@@ -16,6 +16,12 @@ static EMAIL_REGEX: Lazy<Regex> = Lazy::new(|| {
 pub struct Email(String);
 
 impl Email {
+    /// Returns the local part (before `@`).
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the constructor guarantees the presence of `@`.
+    #[must_use]
     pub fn local(&self) -> &str {
         self.0
             .split('@')
@@ -23,6 +29,12 @@ impl Email {
             .expect("Email invariant: always contains '@'")
     }
 
+    /// Returns the domain part (after `@`).
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the constructor guarantees the presence of `@`.
+    #[must_use]
     pub fn domain(&self) -> &str {
         self.0
             .split('@')
@@ -30,6 +42,7 @@ impl Email {
             .expect("Email invariant: always contains '@'")
     }
 
+    #[must_use]
     pub fn belongs_to_domain(&self, domain: &str) -> bool {
         self.domain().eq_ignore_ascii_case(domain)
     }
@@ -81,7 +94,7 @@ impl core::convert::TryFrom<&str> for Email {
             }
         }
 
-        Ok(Email(value.to_lowercase()))
+        Ok(Self(value.to_lowercase()))
     }
 }
 
@@ -103,6 +116,7 @@ impl core::hash::Hash for Email {
 pub struct PhoneE164(String);
 
 impl PhoneE164 {
+    #[must_use]
     pub fn country_code(&self) -> &str {
         // Simple heuristic: 1 digit if starts with 1 or 7, else 2 digits
         let s = &self.0[1..]; // skip +
@@ -113,6 +127,7 @@ impl PhoneE164 {
         }
     }
 
+    #[must_use]
     pub fn national_number(&self) -> &str {
         let cc_len = self.country_code().len();
         &self.0[1 + cc_len..]
@@ -154,7 +169,7 @@ impl core::convert::TryFrom<&str> for PhoneE164 {
             });
         }
 
-        Ok(PhoneE164(String::from(value)))
+        Ok(Self(String::from(value)))
     }
 }
 
@@ -236,6 +251,6 @@ impl core::convert::TryFrom<&str> for DomainName {
             }
         }
 
-        Ok(DomainName(value.to_lowercase()))
+        Ok(Self(value.to_lowercase()))
     }
 }

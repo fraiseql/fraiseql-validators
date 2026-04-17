@@ -1,3 +1,8 @@
+//! Checksum algorithms for validation.
+//!
+//! This module provides Luhn, MOD-97, GS1, and ISIN numeric expansion
+//! utilities used internally by other validator modules.
+
 use alloc::string::String;
 
 /// Luhn algorithm validator for check digits
@@ -82,9 +87,13 @@ pub fn isin_numeric_expansion(s: &str) -> String {
         if c.is_ascii_digit() {
             result.push(c);
         } else if c.is_ascii_uppercase() {
-            let num = (c as u8 - b'A' + 10) as u32;
-            result.push((b'0' + (num / 10) as u8) as char);
-            result.push((b'0' + (num % 10) as u8) as char);
+            let num = u32::from(c as u8 - b'A' + 10);
+            #[allow(clippy::cast_possible_truncation)] // num is always <= 35
+            let high = (num / 10) as u8;
+            #[allow(clippy::cast_possible_truncation)] // num is always <= 35
+            let low = (num % 10) as u8;
+            result.push((b'0' + high) as char);
+            result.push((b'0' + low) as char);
         }
     }
     result

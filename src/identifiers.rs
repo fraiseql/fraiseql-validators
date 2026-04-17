@@ -72,7 +72,7 @@ impl core::convert::TryFrom<&str> for Slug {
             }
         }
 
-        Ok(Slug(String::from(value)))
+        Ok(Self(String::from(value)))
     }
 }
 
@@ -82,31 +82,39 @@ pub struct Color(u32); // packed: 0x00RRGGBB
 
 impl Color {
     /// Returns the red component (0-255).
-    pub fn red(&self) -> u8 {
+    #[must_use]
+    #[allow(clippy::cast_possible_truncation)] // masked to 0xFF
+    pub const fn red(&self) -> u8 {
         ((self.0 >> 16) & 0xFF) as u8
     }
 
     /// Returns the green component (0-255).
-    pub fn green(&self) -> u8 {
+    #[must_use]
+    #[allow(clippy::cast_possible_truncation)] // masked to 0xFF
+    pub const fn green(&self) -> u8 {
         ((self.0 >> 8) & 0xFF) as u8
     }
 
     /// Returns the blue component (0-255).
-    pub fn blue(&self) -> u8 {
+    #[must_use]
+    #[allow(clippy::cast_possible_truncation)] // masked to 0xFF
+    pub const fn blue(&self) -> u8 {
         (self.0 & 0xFF) as u8
     }
 
     /// Returns the color as a hex string in canonical `#RRGGBB` format.
+    #[must_use]
     pub fn to_hex(&self) -> String {
         alloc::format!("#{:02X}{:02X}{:02X}", self.red(), self.green(), self.blue())
     }
 
     /// Returns the relative luminance in [0.0, 1.0] per WCAG 2.1.
+    #[must_use]
     pub fn luminance(&self) -> f64 {
         // WCAG 2.1 relative luminance: https://www.w3.org/TR/WCAG21/#dfn-relative-luminance
-        let r = self.red() as f64 / 255.0;
-        let g = self.green() as f64 / 255.0;
-        let b = self.blue() as f64 / 255.0;
+        let r = f64::from(self.red()) / 255.0;
+        let g = f64::from(self.green()) / 255.0;
+        let b = f64::from(self.blue()) / 255.0;
 
         // Linearize each channel
         let r_linear = if r <= 0.03928 {
@@ -154,9 +162,10 @@ impl core::convert::TryFrom<&str> for Color {
         let (r, g, b) = match hex_len {
             3 => {
                 // #RGB format - expand each nibble
-                let r_nibble = hex_part.chars().nth(0).unwrap();
-                let g_nibble = hex_part.chars().nth(1).unwrap();
-                let b_nibble = hex_part.chars().nth(2).unwrap();
+                let mut chars = hex_part.chars();
+                let r_nibble = chars.next().unwrap();
+                let g_nibble = chars.next().unwrap();
+                let b_nibble = chars.next().unwrap();
 
                 if !r_nibble.is_ascii_hexdigit()
                     || !g_nibble.is_ascii_hexdigit()
@@ -169,9 +178,12 @@ impl core::convert::TryFrom<&str> for Color {
                     });
                 }
 
-                let r = (hex_to_u8(r_nibble) as u16 * 17) as u8;
-                let g = (hex_to_u8(g_nibble) as u16 * 17) as u8;
-                let b = (hex_to_u8(b_nibble) as u16 * 17) as u8;
+                #[allow(clippy::cast_possible_truncation)] // u16 * 17 fits in u8
+                let r = (u16::from(hex_to_u8(r_nibble)) * 17) as u8;
+                #[allow(clippy::cast_possible_truncation)]
+                let g = (u16::from(hex_to_u8(g_nibble)) * 17) as u8;
+                #[allow(clippy::cast_possible_truncation)]
+                let b = (u16::from(hex_to_u8(b_nibble)) * 17) as u8;
                 (r, g, b)
             }
             6 => {
@@ -198,12 +210,14 @@ impl core::convert::TryFrom<&str> for Color {
             }
         };
 
-        Ok(Color(((r as u32) << 16) | ((g as u32) << 8) | (b as u32)))
+        Ok(Self(
+            (u32::from(r) << 16) | (u32::from(g) << 8) | u32::from(b),
+        ))
     }
 }
 
 /// Convert a single hex char to u8 value.
-fn hex_to_u8(c: char) -> u8 {
+const fn hex_to_u8(c: char) -> u8 {
     let upper = c.to_ascii_uppercase();
     match upper {
         '0'..='9' => (upper as u8) - b'0',
@@ -213,9 +227,14 @@ fn hex_to_u8(c: char) -> u8 {
 }
 
 /// Convert a hex pair (2 chars) to u8 value.
+///
+/// # Panics
+///
+/// Panics if `pair` has fewer than 2 characters.
 fn hex_pair_to_u8(pair: &str) -> u8 {
-    let high = hex_to_u8(pair.chars().nth(0).unwrap());
-    let low = hex_to_u8(pair.chars().nth(1).unwrap());
+    let mut chars = pair.chars();
+    let high = hex_to_u8(chars.next().unwrap());
+    let low = hex_to_u8(chars.next().unwrap());
     (high << 4) | low
 }
 
@@ -225,11 +244,17 @@ pub struct Locale(String);
 
 impl Locale {
     /// Returns the language subtag (lowercase).
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the constructor guarantees at least one subtag.
+    #[must_use]
     pub fn language(&self) -> &str {
         self.0.split('-').next().unwrap()
     }
 
     /// Returns the region subtag if present (uppercase).
+    #[must_use]
     pub fn region(&self) -> Option<&str> {
         for part in self.0.split('-') {
             if part.len() == 2 && part.chars().all(|c| c.is_ascii_uppercase()) {
@@ -243,16 +268,17 @@ impl Locale {
     }
 
     /// Returns the script subtag if present (titlecase).
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — `.next()` on a non-empty split always yields at least one element.
+    #[must_use]
     pub fn script(&self) -> Option<&str> {
-        for part in self.0.split('-') {
-            if part.len() == 4
+        self.0.split('-').find(|part| {
+            part.len() == 4
                 && part.chars().next().unwrap().is_ascii_uppercase()
                 && part.chars().skip(1).all(|c| c.is_ascii_lowercase())
-            {
-                return Some(part);
-            }
-        }
-        None
+        })
     }
 }
 
@@ -291,7 +317,7 @@ impl core::convert::TryFrom<&str> for Locale {
 
         // Check language (first part)
         let lang = parts[0];
-        if !(lang.len() >= 2 && lang.len() <= 3 && lang.chars().all(|c| c.is_ascii_lowercase())) {
+        if !((2..=3).contains(&lang.len()) && lang.chars().all(|c| c.is_ascii_lowercase())) {
             return Err(ValidationError {
                 type_name: "Locale",
                 input: String::from(value),
@@ -332,7 +358,7 @@ impl core::convert::TryFrom<&str> for Locale {
                     i += 1;
                     continue;
                 }
-            } else if len >= 5 && len <= 8 {
+            } else if (5..=8).contains(&len) {
                 // Variant
                 if part.chars().all(|c| c.is_ascii_alphanumeric()) {
                     i += 1;
@@ -347,11 +373,11 @@ impl core::convert::TryFrom<&str> for Locale {
             });
         }
 
-        Ok(Locale(String::from(value)))
+        Ok(Self(String::from(value)))
     }
 }
 
-/// SemVer 2.0.0: MAJOR.MINOR.PATCH[-pre][+build]
+/// `SemVer` 2.0.0: `MAJOR.MINOR.PATCH[-pre][+build]`
 #[derive(Clone, Debug)]
 pub struct Semver {
     major: u64,
@@ -363,39 +389,46 @@ pub struct Semver {
 
 impl Semver {
     /// Returns the major version.
-    pub fn major(&self) -> u64 {
+    #[must_use]
+    pub const fn major(&self) -> u64 {
         self.major
     }
 
     /// Returns the minor version.
-    pub fn minor(&self) -> u64 {
+    #[must_use]
+    pub const fn minor(&self) -> u64 {
         self.minor
     }
 
     /// Returns the patch version.
-    pub fn patch(&self) -> u64 {
+    #[must_use]
+    pub const fn patch(&self) -> u64 {
         self.patch
     }
 
     /// Returns the pre-release identifier if present.
+    #[must_use]
     pub fn pre_release(&self) -> Option<&str> {
         self.pre_release.as_deref()
     }
 
     /// Returns the build metadata if present.
+    #[must_use]
     pub fn build_metadata(&self) -> Option<&str> {
         self.build_metadata.as_deref()
     }
 
     /// Checks if this version is compatible with the given base version.
     /// Compatible means same major.minor, patch >= base.patch.
-    pub fn compatible_with(&self, base: &Semver) -> bool {
+    #[must_use]
+    pub const fn compatible_with(&self, base: &Self) -> bool {
         self.major == base.major && self.minor == base.minor && self.patch >= base.patch
     }
 
     /// Checks if this version is caret-compatible with the given base version.
     /// Compatible means same major, minor.patch >= base.minor.patch.
-    pub fn caret_compatible_with(&self, base: &Semver) -> bool {
+    #[must_use]
+    pub const fn caret_compatible_with(&self, base: &Self) -> bool {
         self.major == base.major
             && (self.minor > base.minor || (self.minor == base.minor && self.patch >= base.patch))
     }
@@ -451,10 +484,10 @@ impl fmt::Display for Semver {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}.{}.{}", self.major, self.minor, self.patch)?;
         if let Some(pre) = &self.pre_release {
-            write!(f, "-{}", pre)?;
+            write!(f, "-{pre}")?;
         }
         if let Some(build) = &self.build_metadata {
-            write!(f, "+{}", build)?;
+            write!(f, "+{build}")?;
         }
         Ok(())
     }
@@ -496,7 +529,7 @@ impl core::convert::TryFrom<&str> for Semver {
         let mut build_metadata = None;
 
         for part in parts {
-            if value.contains(&alloc::format!("-{}", part)) && pre_release.is_none() {
+            if value.contains(&alloc::format!("-{part}")) && pre_release.is_none() {
                 if !is_valid_pre_release(part) {
                     return Err(ValidationError {
                         type_name: "Semver",
@@ -505,7 +538,7 @@ impl core::convert::TryFrom<&str> for Semver {
                     });
                 }
                 pre_release = Some(String::from(part));
-            } else if value.contains(&alloc::format!("+{}", part)) && build_metadata.is_none() {
+            } else if value.contains(&alloc::format!("+{part}")) && build_metadata.is_none() {
                 if !is_valid_build_metadata(part) {
                     return Err(ValidationError {
                         type_name: "Semver",
@@ -517,7 +550,7 @@ impl core::convert::TryFrom<&str> for Semver {
             }
         }
 
-        Ok(Semver {
+        Ok(Self {
             major,
             minor,
             patch,
@@ -594,7 +627,7 @@ fn is_valid_build_metadata(s: &str) -> bool {
     true
 }
 
-/// Compare two pre-release identifiers per SemVer 2.0.0 rules.
+/// Compare two pre-release identifiers per `SemVer` 2.0.0 rules.
 fn compare_pre_release(a: &str, b: &str) -> core::cmp::Ordering {
     let a_parts: alloc::vec::Vec<&str> = a.split('.').collect();
     let b_parts: alloc::vec::Vec<&str> = b.split('.').collect();
@@ -630,27 +663,44 @@ pub struct Vin([u8; 17]); // stored as uppercase ASCII
 
 impl Vin {
     /// Returns the World Manufacturer Identifier (chars 0–2).
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the inner array is always valid ASCII.
+    #[must_use]
     pub fn wmi(&self) -> &str {
         core::str::from_utf8(&self.0[0..3]).unwrap()
     }
 
     /// Returns the Vehicle Descriptor Section (chars 3–8).
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the inner array is always valid ASCII.
+    #[must_use]
     pub fn vds(&self) -> &str {
         core::str::from_utf8(&self.0[3..9]).unwrap()
     }
 
     /// Returns the Vehicle Identifier Section (chars 9–16 per FMVSS).
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the inner array is always valid ASCII.
+    #[must_use]
     pub fn vis(&self) -> &str {
         core::str::from_utf8(&self.0[9..17]).unwrap()
     }
 
     /// Returns the check digit (char at position 8, 0-based index 8).
-    pub fn check_digit(&self) -> char {
+    #[must_use]
+    pub const fn check_digit(&self) -> char {
         self.0[8] as char
     }
 
     /// Returns the model year character (char at position 9, 0-based index 9).
-    pub fn model_year_char(&self) -> char {
+    #[must_use]
+    pub const fn model_year_char(&self) -> char {
         self.0[9] as char
     }
 }
@@ -698,7 +748,7 @@ impl core::convert::TryFrom<&str> for Vin {
             });
         }
 
-        Ok(Vin(vin_bytes))
+        Ok(Self(vin_bytes))
     }
 }
 
@@ -706,15 +756,15 @@ impl core::convert::TryFrom<&str> for Vin {
 fn is_valid_vin_char(c: char) -> bool {
     let upper = c.to_ascii_uppercase();
     upper.is_ascii_digit()
-        || (upper >= 'A' && upper <= 'H')
-        || (upper >= 'J' && upper <= 'N')
-        || (upper >= 'P' && upper <= 'R')
-        || (upper >= 'S' && upper <= 'Z')
+        || ('A'..='H').contains(&upper)
+        || ('J'..='N').contains(&upper)
+        || ('P'..='R').contains(&upper)
+        || ('S'..='Z').contains(&upper)
 }
 
 /// Calculate the check digit for a VIN.
 fn calculate_vin_check_digit(vin: &[u8; 17]) -> u8 {
-    fn char_value(c: u8) -> u8 {
+    const fn char_value(c: u8) -> u8 {
         match c {
             b'0'..=b'9' => c - b'0',
             b'A'..=b'H' => 1 + (c - b'A'),
@@ -729,14 +779,15 @@ fn calculate_vin_check_digit(vin: &[u8; 17]) -> u8 {
     const WEIGHTS: [u8; 17] = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2];
 
     let mut sum = 0u32;
-    for i in 0..17 {
-        let value = char_value(vin[i]) as u32;
-        let weight = WEIGHTS[i] as u32;
-        sum += value * weight;
+    for (digit, weight) in vin.iter().zip(WEIGHTS.iter()) {
+        let value = u32::from(char_value(*digit));
+        let w = u32::from(*weight);
+        sum += value * w;
     }
 
     let remainder = sum % 11;
     match remainder {
+        #[allow(clippy::cast_possible_truncation)] // remainder is 0-9
         0..=9 => b'0' + remainder as u8,
         10 => b'X',
         _ => unreachable!(),

@@ -1,10 +1,12 @@
-use fraiseql_validators::network::{Port, MacAddressEui48, MacAddressEui64, Ipv4Address, Ipv6Address, Asn};
+use fraiseql_validators::network::{
+    Asn, Ipv4Address, Ipv6Address, MacAddressEui48, MacAddressEui64, Port,
+};
 
 #[test]
 fn test_port_try_from_valid() {
     let port = Port::try_from("80").unwrap();
     assert_eq!(port.value(), 80);
-    assert_eq!(format!("{}", port), "80");
+    assert_eq!(format!("{port}"), "80");
 }
 
 #[test]
@@ -143,7 +145,10 @@ fn test_mac_address_eui48_is_locally_administered() {
 fn test_mac_address_eui64_try_from_colon_separated() {
     let mac = MacAddressEui64::try_from("00:1A:2B:FF:FE:3C:4D:5E").unwrap();
     assert_eq!(mac.to_canonical(), "00:1a:2b:ff:fe:3c:4d:5e");
-    assert_eq!(mac.octets(), [0x00, 0x1A, 0x2B, 0xFF, 0xFE, 0x3C, 0x4D, 0x5E]);
+    assert_eq!(
+        mac.octets(),
+        [0x00, 0x1A, 0x2B, 0xFF, 0xFE, 0x3C, 0x4D, 0x5E]
+    );
 }
 
 #[test]
@@ -171,14 +176,17 @@ fn test_mac_address_eui64_from_eui48() {
     let eui48 = MacAddressEui48::try_from("00:1A:2B:3C:4D:5E").unwrap();
     let eui64 = MacAddressEui64::from_eui48(&eui48);
     assert_eq!(eui64.to_canonical(), "00:1a:2b:ff:fe:3c:4d:5e");
-    assert_eq!(eui64.octets(), [0x00, 0x1A, 0x2B, 0xFF, 0xFE, 0x3C, 0x4D, 0x5E]);
+    assert_eq!(
+        eui64.octets(),
+        [0x00, 0x1A, 0x2B, 0xFF, 0xFE, 0x3C, 0x4D, 0x5E]
+    );
 }
 
 #[test]
 fn test_ipv4_address_try_from_valid() {
     let ip = Ipv4Address::try_from("192.168.1.1").unwrap();
     assert_eq!(ip.octets(), [192, 168, 1, 1]);
-    assert_eq!(format!("{}", ip), "192.168.1.1");
+    assert_eq!(format!("{ip}"), "192.168.1.1");
 }
 
 #[test]
@@ -256,14 +264,20 @@ fn test_ipv4_address_is_link_local() {
 #[test]
 fn test_ipv6_address_try_from_compressed() {
     let ip = Ipv6Address::try_from("2001:db8::1").unwrap();
-    assert_eq!(ip.segments(), [0x2001, 0x0db8, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001]);
+    assert_eq!(
+        ip.segments(),
+        [0x2001, 0x0db8, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001]
+    );
     assert_eq!(ip.to_string(), "2001:db8::1");
 }
 
 #[test]
 fn test_ipv6_address_try_from_loopback() {
     let ip = Ipv6Address::try_from("::1").unwrap();
-    assert_eq!(ip.segments(), [0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001]);
+    assert_eq!(
+        ip.segments(),
+        [0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001]
+    );
     assert!(ip.is_loopback());
     assert!(!ip.is_unspecified());
 }
@@ -271,7 +285,10 @@ fn test_ipv6_address_try_from_loopback() {
 #[test]
 fn test_ipv6_address_try_from_unspecified() {
     let ip = Ipv6Address::try_from("::").unwrap();
-    assert_eq!(ip.segments(), [0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000]);
+    assert_eq!(
+        ip.segments(),
+        [0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000]
+    );
     assert!(ip.is_unspecified());
     assert!(!ip.is_loopback());
 }
@@ -279,16 +296,11 @@ fn test_ipv6_address_try_from_unspecified() {
 #[test]
 fn test_ipv6_address_try_from_full() {
     let ip = Ipv6Address::try_from("2001:0db8:0000:0000:0000:0000:0000:0001").unwrap();
-    assert_eq!(ip.segments(), [0x2001, 0x0db8, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001]);
+    assert_eq!(
+        ip.segments(),
+        [0x2001, 0x0db8, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0x0001]
+    );
     assert_eq!(ip.to_string(), "2001:db8::1");
-}
-
-#[test]
-fn test_ipv6_address_try_from_ipv4_mapped() {
-    // TODO: implement IPv4-mapped parsing
-    // let ip = Ipv6Address::try_from("::ffff:192.0.2.1").unwrap();
-    // assert_eq!(ip.segments(), [0x0000, 0x0000, 0x0000, 0x0000, 0x0000, 0xffff, 0xc000, 0x0201]);
-    // assert_eq!(ip.to_string(), "::ffff:192.0.2.1");
 }
 
 #[test]
@@ -311,13 +323,13 @@ fn test_ipv6_address_try_from_two_double_colon() {
 fn test_asn_try_from_plain() {
     let asn = Asn::try_from("65001").unwrap();
     assert_eq!(asn.value(), 65001);
-    assert_eq!(format!("{}", asn), "65001");
+    assert_eq!(format!("{asn}"), "65001");
 }
 
 #[test]
 fn test_asn_try_from_dotted() {
     let asn = Asn::try_from("1.65535").unwrap();
-    assert_eq!(asn.value(), 131071);
+    assert_eq!(asn.value(), 131_071);
     assert_eq!(asn.to_dotted(), "1.65535");
 }
 

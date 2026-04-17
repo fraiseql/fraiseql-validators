@@ -18,7 +18,8 @@ pub struct Ean8([u8; 8]);
 
 impl Ean8 {
     /// Returns the check digit as a char.
-    pub fn check_digit(&self) -> char {
+    #[must_use]
+    pub const fn check_digit(&self) -> char {
         self.0[7] as char
     }
 }
@@ -65,7 +66,7 @@ impl core::convert::TryFrom<&str> for Ean8 {
             });
         }
 
-        Ok(Ean8(digits))
+        Ok(Self(digits))
     }
 }
 
@@ -75,6 +76,11 @@ pub struct Ean13([u8; 13]);
 
 impl Ean13 {
     /// Returns the GS1 company prefix (first 3 digits).
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the inner array is always valid ASCII digits.
+    #[must_use]
     pub fn gs1_prefix(&self) -> &str {
         core::str::from_utf8(&self.0[0..3]).unwrap()
     }
@@ -122,7 +128,7 @@ impl core::convert::TryFrom<&str> for Ean13 {
             });
         }
 
-        Ok(Ean13(digits))
+        Ok(Self(digits))
     }
 }
 
@@ -132,6 +138,7 @@ pub struct UpcA([u8; 12]);
 
 impl UpcA {
     /// Converts to EAN-13 by prepending "0".
+    #[must_use]
     pub fn to_ean13(&self) -> Ean13 {
         let mut ean13_digits = [b'0'; 13]; // Start with '0'
         ean13_digits[1..].copy_from_slice(&self.0);
@@ -181,7 +188,7 @@ impl core::convert::TryFrom<&str> for UpcA {
             });
         }
 
-        Ok(UpcA(digits))
+        Ok(Self(digits))
     }
 }
 
@@ -191,12 +198,18 @@ pub struct Isbn13([u8; 13]);
 
 impl Isbn13 {
     /// Returns the registration group element (chars 4–4, simplified).
+    ///
+    /// # Panics
+    ///
+    /// Cannot panic — the inner array is always valid ASCII digits.
+    #[must_use]
     pub fn registration_group(&self) -> &str {
         core::str::from_utf8(&self.0[3..4]).unwrap()
     }
 
     /// Converts to EAN-13.
-    pub fn as_ean13(&self) -> Ean13 {
+    #[must_use]
+    pub const fn as_ean13(&self) -> Ean13 {
         Ean13(self.0)
     }
 }
@@ -227,7 +240,7 @@ impl core::convert::TryFrom<&str> for Isbn13 {
         }
 
         // Transmute since memory layout is identical
-        Ok(Isbn13(ean13.0))
+        Ok(Self(ean13.0))
     }
 }
 
@@ -276,7 +289,9 @@ impl core::convert::TryFrom<&str> for Issn {
         for (i, c) in stripped.chars().enumerate() {
             if i < 7 {
                 if let Some(d) = c.to_digit(10) {
-                    digits[i] = d as u8 + b'0'; // Store as ASCII
+                    #[allow(clippy::cast_possible_truncation)] // d is 0-9
+                    let byte = d as u8;
+                    digits[i] = byte + b'0'; // Store as ASCII
                 } else {
                     return Err(ValidationError {
                         type_name: "Issn",
@@ -302,9 +317,10 @@ impl core::convert::TryFrom<&str> for Issn {
 
         // Weighted sum check: weights 8,7,6,5,4,3,2 for first 7 digits
         let mut sum = 0u32;
-        for i in 0..7 {
+        for (i, &d) in digits[..7].iter().enumerate() {
+            #[allow(clippy::cast_possible_truncation)] // i is 0-6
             let weight = 8 - i as u32;
-            let digit = (digits[i] - b'0') as u32;
+            let digit = u32::from(d - b'0');
             sum += digit * weight;
         }
 
@@ -312,7 +328,9 @@ impl core::convert::TryFrom<&str> for Issn {
         let expected_check = if check == 10 {
             b'X'
         } else {
-            b'0' + check as u8
+            #[allow(clippy::cast_possible_truncation)] // check is 0-9
+            let byte = check as u8;
+            b'0' + byte
         };
 
         if digits[7] != expected_check {
@@ -323,7 +341,7 @@ impl core::convert::TryFrom<&str> for Issn {
             });
         }
 
-        Ok(Issn(digits))
+        Ok(Self(digits))
     }
 }
 
@@ -333,11 +351,13 @@ pub struct Gtin14([u8; 14]);
 
 impl Gtin14 {
     /// Returns the indicator digit (first char, packaging level 0-8).
-    pub fn indicator_digit(&self) -> char {
+    #[must_use]
+    pub const fn indicator_digit(&self) -> char {
         self.0[0] as char
     }
 
     /// Converts to EAN-13 if indicator digit is 0.
+    #[must_use]
     pub fn as_ean13(&self) -> Option<Ean13> {
         if self.0[0] == b'0' {
             let mut ean13_digits = [0u8; 13];
@@ -391,6 +411,6 @@ impl core::convert::TryFrom<&str> for Gtin14 {
             });
         }
 
-        Ok(Gtin14(digits))
+        Ok(Self(digits))
     }
 }

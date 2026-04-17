@@ -21,7 +21,7 @@ fn test_validation_error_display() {
         reason: String::from("some reason"),
     };
 
-    let display = format!("{}", err);
+    let display = format!("{err}");
     assert!(display.contains("TestType"));
     assert!(display.contains("invalid input"));
     assert!(display.contains("some reason"));

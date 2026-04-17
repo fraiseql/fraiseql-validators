@@ -1,4 +1,9 @@
-use alloc::{format, string::{String, ToString}, vec, vec::Vec};
+//! Validation for network types.
+//!
+//! This module provides validators for ports, MAC addresses (EUI-48 and EUI-64),
+//! IPv4 and IPv6 addresses, and Autonomous System Numbers (ASN).
+
+use alloc::{format, string::String, vec::Vec};
 use core::fmt;
 
 use crate::ValidationError;
@@ -281,7 +286,12 @@ impl core::convert::TryFrom<&str> for Ipv6Address {
 
     fn try_from(value: &str) -> Result<Self, Self::Error> {
         // Check for malformed :: (like :::)
-        if value.contains(":::") || value.starts_with("::") && value.len() > 2 && value.chars().nth(2) == Some(':') || value.ends_with("::") && value.len() > 2 && value.chars().nth(value.len() - 3) == Some(':') {
+        if value.contains(":::")
+            || value.starts_with("::") && value.len() > 2 && value.chars().nth(2) == Some(':')
+            || value.ends_with("::")
+                && value.len() > 2
+                && value.chars().nth(value.len() - 3) == Some(':')
+        {
             return Err(ValidationError {
                 type_name: "Ipv6Address",
                 input: String::from(value),
@@ -321,8 +331,16 @@ impl core::convert::TryFrom<&str> for Ipv6Address {
             }
         } else {
             // Has ::, expand
-            let left_parts: Vec<&str> = if parts[0].is_empty() { Vec::new() } else { parts[0].split(':').collect() };
-            let right_parts: Vec<&str> = if parts[1].is_empty() { Vec::new() } else { parts[1].split(':').collect() };
+            let left_parts: Vec<&str> = if parts[0].is_empty() {
+                Vec::new()
+            } else {
+                parts[0].split(':').collect()
+            };
+            let right_parts: Vec<&str> = if parts[1].is_empty() {
+                Vec::new()
+            } else {
+                parts[1].split(':').collect()
+            };
 
             // Check for invalid format (segments containing ':')
             for seg in &left_parts {
@@ -346,11 +364,12 @@ impl core::convert::TryFrom<&str> for Ipv6Address {
 
             // Parse left segments
             for seg in &left_parts {
-                segments[segment_index] = u16::from_str_radix(seg, 16).map_err(|_| ValidationError {
-                    type_name: "Ipv6Address",
-                    input: String::from(value),
-                    reason: String::from("invalid hex digit"),
-                })?;
+                segments[segment_index] =
+                    u16::from_str_radix(seg, 16).map_err(|_| ValidationError {
+                        type_name: "Ipv6Address",
+                        input: String::from(value),
+                        reason: String::from("invalid hex digit"),
+                    })?;
                 segment_index += 1;
             }
 
@@ -360,11 +379,12 @@ impl core::convert::TryFrom<&str> for Ipv6Address {
 
             // Parse right segments
             for seg in &right_parts {
-                segments[segment_index] = u16::from_str_radix(seg, 16).map_err(|_| ValidationError {
-                    type_name: "Ipv6Address",
-                    input: String::from(value),
-                    reason: String::from("invalid hex digit"),
-                })?;
+                segments[segment_index] =
+                    u16::from_str_radix(seg, 16).map_err(|_| ValidationError {
+                        type_name: "Ipv6Address",
+                        input: String::from(value),
+                        reason: String::from("invalid hex digit"),
+                    })?;
                 segment_index += 1;
             }
         }
@@ -375,17 +395,21 @@ impl core::convert::TryFrom<&str> for Ipv6Address {
 
 impl fmt::Display for Ipv6Address {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        use core::fmt::Write;
+
         // RFC 5952 canonical form: longest run of zeros compressed with ::
-        let mut best_start = -1;
+        let mut best_start: i32 = -1;
         let mut best_len = 0;
 
-        let mut current_start = -1;
+        let mut current_start: i32 = -1;
         let mut current_len = 0;
 
         for i in 0..8 {
             if self.0[i] == 0 {
                 if current_start == -1 {
-                    current_start = i as i32;
+                    #[allow(clippy::cast_possible_truncation, clippy::cast_possible_wrap)]
+                    let idx = i as i32;
+                    current_start = idx;
                 }
                 current_len += 1;
                 if current_len > best_len {
@@ -403,7 +427,14 @@ impl fmt::Display for Ipv6Address {
             return write!(
                 f,
                 "{:x}:{:x}:{:x}:{:x}:{:x}:{:x}:{:x}:{:x}",
-                self.0[0], self.0[1], self.0[2], self.0[3], self.0[4], self.0[5], self.0[6], self.0[7]
+                self.0[0],
+                self.0[1],
+                self.0[2],
+                self.0[3],
+                self.0[4],
+                self.0[5],
+                self.0[6],
+                self.0[7]
             );
         }
 
@@ -411,14 +442,16 @@ impl fmt::Display for Ipv6Address {
         let mut result = String::new();
         let mut i = 0;
         while i < 8 {
-            if i == best_start as usize {
+            #[allow(clippy::cast_sign_loss)] // best_start is always >= 0 here
+            let bs = best_start as usize;
+            if i == bs {
                 result.push_str("::");
                 i += best_len;
             } else {
                 if !result.is_empty() && !result.ends_with(':') {
                     result.push(':');
                 }
-                result.push_str(&format!("{:x}", self.0[i]));
+                let _ = write!(result, "{:x}", self.0[i]);
                 i += 1;
             }
         }
@@ -431,7 +464,7 @@ impl fmt::Display for Ipv6Address {
             result.pop();
         }
 
-        write!(f, "{}", result)
+        write!(f, "{result}")
     }
 }
 
@@ -458,7 +491,7 @@ impl Asn {
     pub fn to_dotted(&self) -> String {
         let high = self.0 / 65536;
         let low = self.0 % 65536;
-        format!("{}.{}", high, low)
+        format!("{high}.{low}")
     }
 }
 
@@ -501,7 +534,7 @@ impl core::convert::TryFrom<&str> for Asn {
                     reason: String::from("ASN 0 is reserved"),
                 });
             }
-            Ok(Asn(asn))
+            Ok(Self(asn))
         } else {
             // Plain decimal
             let asn: u32 = value.parse().map_err(|_| ValidationError {
@@ -516,7 +549,7 @@ impl core::convert::TryFrom<&str> for Asn {
                     reason: String::from("ASN 0 is reserved"),
                 });
             }
-            Ok(Asn(asn))
+            Ok(Self(asn))
         }
     }
 }

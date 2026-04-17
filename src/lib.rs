@@ -1,6 +1,6 @@
 //! # fraiseql-validators
 //!
-//! A no_std library for validating various financial and contact identifiers.
+//! A `no_std` library for validating various financial and contact identifiers.
 //!
 //! This crate provides type-safe wrappers for common identifiers like email addresses,
 //! phone numbers, IBANs, ISINs, and more, ensuring they conform to their respective standards.
@@ -16,7 +16,7 @@ use core::fmt;
 ///
 /// This error type is returned when attempting to parse invalid input
 /// into a validated type.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct ValidationError {
     /// The name of the type that failed validation (e.g., "Email", "Iban").
     pub type_name: &'static str,

@@ -1,2 +1,0 @@
-cargo:rerun-if-changed=data/iso4217_currencies.csv
-cargo:rerun-if-changed=data/iso10383_mic.csv

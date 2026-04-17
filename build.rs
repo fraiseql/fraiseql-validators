@@ -118,6 +118,7 @@ fn emit_sorted_str_set(name: &str, values: &[String]) -> String {
     }
     code.push_str("];\n\n");
 
+    let _ = writeln!(code, "#[must_use]");
     let _ = writeln!(code, "pub fn {fn_name}(s: &str) -> bool {{");
     let _ = writeln!(code, "    {const_name}.binary_search(&s).is_ok()");
     code.push_str("}\n");

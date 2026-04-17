@@ -1,12 +1,13 @@
 use fraiseql_validators::geographic::{
-    CountryCode, CountryCodeAlpha3, LanguageCode, Latitude, Longitude, PostalCode, IataAirportCode, IcaoAirportCode, IanaTimezone,
+    CountryCode, CountryCodeAlpha3, IanaTimezone, IataAirportCode, IcaoAirportCode, LanguageCode,
+    Latitude, Longitude, PostalCode,
 };
 
 #[test]
 fn test_country_code_try_from_valid() {
     let code = CountryCode::try_from("FR").unwrap();
     assert_eq!(code.as_str(), "FR");
-    assert_eq!(format!("{}", code), "FR");
+    assert_eq!(format!("{code}"), "FR");
 }
 
 #[test]
@@ -35,7 +36,7 @@ fn test_country_code_try_from_wrong_length() {
 fn test_country_code_alpha3_try_from_valid() {
     let code = CountryCodeAlpha3::try_from("FRA").unwrap();
     assert_eq!(code.as_str(), "FRA");
-    assert_eq!(format!("{}", code), "FRA");
+    assert_eq!(format!("{code}"), "FRA");
 }
 
 #[test]
@@ -73,14 +74,14 @@ fn test_country_codes_consistency() {
 fn test_language_code_try_from_valid() {
     let lang = LanguageCode::try_from("en").unwrap();
     assert_eq!(lang.primary(), "en");
-    assert_eq!(format!("{}", lang), "en");
+    assert_eq!(format!("{lang}"), "en");
 }
 
 #[test]
 fn test_language_code_try_from_3_letter() {
     let lang = LanguageCode::try_from("aaa").unwrap();
     assert_eq!(lang.primary(), "aaa");
-    assert_eq!(format!("{}", lang), "aaa");
+    assert_eq!(format!("{lang}"), "aaa");
 }
 
 #[test]
@@ -108,20 +109,20 @@ fn test_language_code_try_from_too_short() {
 #[test]
 fn test_latitude_try_from_valid() {
     let lat = Latitude::try_from(45.0).unwrap();
-    assert_eq!(lat.degrees(), 45.0);
-    assert_eq!(format!("{}", lat), "45.000000");
+    assert!((lat.degrees() - 45.0).abs() < f64::EPSILON);
+    assert_eq!(format!("{lat}"), "45.000000");
 }
 
 #[test]
 fn test_latitude_try_from_boundary_min() {
     let lat = Latitude::try_from(-90.0).unwrap();
-    assert_eq!(lat.degrees(), -90.0);
+    assert!((lat.degrees() - (-90.0)).abs() < f64::EPSILON);
 }
 
 #[test]
 fn test_latitude_try_from_boundary_max() {
     let lat = Latitude::try_from(90.0).unwrap();
-    assert_eq!(lat.degrees(), 90.0);
+    assert!((lat.degrees() - 90.0).abs() < f64::EPSILON);
 }
 
 #[test]
@@ -143,7 +144,7 @@ fn test_latitude_try_from_nan() {
 #[test]
 fn test_latitude_try_from_string() {
     let lat = Latitude::try_from("45.123").unwrap();
-    assert_eq!(lat.degrees(), 45.123);
+    assert!((lat.degrees() - 45.123).abs() < f64::EPSILON);
 }
 
 #[test]
@@ -157,20 +158,20 @@ fn test_latitude_try_from_invalid_string() {
 #[test]
 fn test_longitude_try_from_valid() {
     let lon = Longitude::try_from(-75.0).unwrap();
-    assert_eq!(lon.degrees(), -75.0);
-    assert_eq!(format!("{}", lon), "-75.000000");
+    assert!((lon.degrees() - (-75.0)).abs() < f64::EPSILON);
+    assert_eq!(format!("{lon}"), "-75.000000");
 }
 
 #[test]
 fn test_longitude_try_from_boundary_min() {
     let lon = Longitude::try_from(-180.0).unwrap();
-    assert_eq!(lon.degrees(), -180.0);
+    assert!((lon.degrees() - (-180.0)).abs() < f64::EPSILON);
 }
 
 #[test]
 fn test_longitude_try_from_boundary_max() {
     let lon = Longitude::try_from(180.0).unwrap();
-    assert_eq!(lon.degrees(), 180.0);
+    assert!((lon.degrees() - 180.0).abs() < f64::EPSILON);
 }
 
 #[test]
@@ -184,7 +185,7 @@ fn test_longitude_try_from_out_of_range() {
 #[test]
 fn test_longitude_try_from_string() {
     let lon = Longitude::try_from("-122.4194").unwrap();
-    assert_eq!(lon.degrees(), -122.4194);
+    assert!((lon.degrees() - (-122.4194)).abs() < f64::EPSILON);
 }
 
 #[test]
@@ -192,7 +193,7 @@ fn test_postal_code_try_from_fr_valid() {
     let postal = PostalCode::try_from("FR:75001").unwrap();
     assert_eq!(postal.country(), "FR");
     assert_eq!(postal.code(), "75001");
-    assert_eq!(format!("{}", postal), "FR:75001");
+    assert_eq!(format!("{postal}"), "FR:75001");
 }
 
 #[test]
@@ -243,7 +244,7 @@ fn test_postal_code_belongs_to_country() {
 fn test_iata_airport_code_try_from_valid() {
     let code = IataAirportCode::try_from("CDG").unwrap();
     assert_eq!(code.as_str(), "CDG");
-    assert_eq!(format!("{}", code), "CDG");
+    assert_eq!(format!("{code}"), "CDG");
 }
 
 #[test]
@@ -272,7 +273,7 @@ fn test_iata_airport_code_try_from_wrong_length() {
 fn test_icao_airport_code_try_from_valid() {
     let code = IcaoAirportCode::try_from("LFPG").unwrap();
     assert_eq!(code.as_str(), "LFPG");
-    assert_eq!(format!("{}", code), "LFPG");
+    assert_eq!(format!("{code}"), "LFPG");
 }
 
 #[test]
@@ -301,7 +302,7 @@ fn test_icao_airport_code_try_from_wrong_length() {
 fn test_iana_timezone_try_from_valid() {
     let tz = IanaTimezone::try_from("Europe/Paris").unwrap();
     assert_eq!(tz.as_str(), "Europe/Paris");
-    assert_eq!(format!("{}", tz), "Europe/Paris");
+    assert_eq!(format!("{tz}"), "Europe/Paris");
 }
 
 #[test]

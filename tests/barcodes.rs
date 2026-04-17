@@ -3,7 +3,7 @@ use fraiseql_validators::barcodes::{Ean13, Ean8, Gtin14, Isbn13, Issn, UpcA};
 #[test]
 fn test_ean8_try_from_valid() {
     let ean8 = Ean8::try_from("73513537").unwrap();
-    assert_eq!(format!("{}", ean8), "73513537");
+    assert_eq!(format!("{ean8}"), "73513537");
     assert_eq!(ean8.check_digit(), '7');
 }
 
@@ -42,7 +42,7 @@ fn test_ean8_try_from_non_digit() {
 #[test]
 fn test_upca_try_from_valid() {
     let upca = UpcA::try_from("012345678905").unwrap();
-    assert_eq!(format!("{}", upca), "012345678905");
+    assert_eq!(format!("{upca}"), "012345678905");
 }
 
 #[test]
@@ -65,13 +65,13 @@ fn test_upca_try_from_too_short() {
 fn test_upca_to_ean13() {
     let upca = UpcA::try_from("012345678905").unwrap();
     let ean13 = upca.to_ean13();
-    assert_eq!(format!("{}", ean13), "0012345678905");
+    assert_eq!(format!("{ean13}"), "0012345678905");
 }
 
 #[test]
 fn test_ean13_try_from_valid() {
     let ean13 = Ean13::try_from("5901234123457").unwrap();
-    assert_eq!(format!("{}", ean13), "5901234123457");
+    assert_eq!(format!("{ean13}"), "5901234123457");
     assert_eq!(ean13.gs1_prefix(), "590");
 }
 
@@ -94,14 +94,14 @@ fn test_ean13_try_from_too_short() {
 #[test]
 fn test_isbn13_try_from_valid_978() {
     let isbn = Isbn13::try_from("9780306406157").unwrap();
-    assert_eq!(format!("{}", isbn), "9780306406157");
+    assert_eq!(format!("{isbn}"), "9780306406157");
     assert_eq!(isbn.registration_group(), "0");
 }
 
 #[test]
 fn test_isbn13_try_from_valid_979() {
     let isbn = Isbn13::try_from("9790306406156").unwrap();
-    assert_eq!(format!("{}", isbn), "9790306406156");
+    assert_eq!(format!("{isbn}"), "9790306406156");
 }
 
 #[test]
@@ -124,26 +124,26 @@ fn test_isbn13_try_from_bad_check_digit() {
 fn test_isbn13_as_ean13() {
     let isbn = Isbn13::try_from("9780306406157").unwrap();
     let ean13 = isbn.as_ean13();
-    assert_eq!(format!("{}", ean13), "9780306406157");
+    assert_eq!(format!("{ean13}"), "9780306406157");
     assert_eq!(ean13.gs1_prefix(), "978");
 }
 
 #[test]
 fn test_issn_try_from_valid_with_hyphen() {
     let issn = Issn::try_from("0317-8471").unwrap();
-    assert_eq!(format!("{}", issn), "0317-8471");
+    assert_eq!(format!("{issn}"), "0317-8471");
 }
 
 #[test]
 fn test_issn_try_from_valid_without_hyphen() {
     let issn = Issn::try_from("03178471").unwrap();
-    assert_eq!(format!("{}", issn), "0317-8471");
+    assert_eq!(format!("{issn}"), "0317-8471");
 }
 
 #[test]
 fn test_issn_try_from_valid_with_x() {
     let issn = Issn::try_from("0378-5955").unwrap();
-    assert_eq!(format!("{}", issn), "0378-5955");
+    assert_eq!(format!("{issn}"), "0378-5955");
 }
 
 #[test]
@@ -157,7 +157,7 @@ fn test_issn_try_from_bad_check_digit() {
 #[test]
 fn test_gtin14_try_from_valid() {
     let gtin = Gtin14::try_from("10614141000415").unwrap();
-    assert_eq!(format!("{}", gtin), "10614141000415");
+    assert_eq!(format!("{gtin}"), "10614141000415");
     assert_eq!(gtin.indicator_digit(), '1');
 }
 
@@ -181,7 +181,7 @@ fn test_gtin14_try_from_too_short() {
 fn test_gtin14_as_ean13_some() {
     let gtin = Gtin14::try_from("01061414100044").unwrap(); // Indicator 0
     let ean13 = gtin.as_ean13().unwrap();
-    assert_eq!(format!("{}", ean13), "1061414100044");
+    assert_eq!(format!("{ean13}"), "1061414100044");
 }
 
 #[test]

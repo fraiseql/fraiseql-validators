@@ -3,7 +3,7 @@ use fraiseql_validators::contact::{DomainName, Email, PhoneE164};
 #[test]
 fn test_email_try_from_valid() {
     let email = Email::try_from("user@example.com").unwrap();
-    assert_eq!(format!("{}", email), "user@example.com");
+    assert_eq!(format!("{email}"), "user@example.com");
 }
 
 #[test]
@@ -56,7 +56,7 @@ fn test_email_case_insensitive_eq() {
 fn test_email_roundtrip() {
     let original = "test.email+tag@example.co.uk";
     let email = Email::try_from(original).unwrap();
-    let roundtrip = format!("{}", email);
+    let roundtrip = format!("{email}");
     let email2 = Email::try_from(roundtrip.as_str()).unwrap();
     assert_eq!(email, email2);
 }
@@ -64,7 +64,7 @@ fn test_email_roundtrip() {
 #[test]
 fn test_phone_e164_try_from_valid() {
     let phone = PhoneE164::try_from("+14155552671").unwrap();
-    assert_eq!(format!("{}", phone), "+14155552671");
+    assert_eq!(format!("{phone}"), "+14155552671");
 }
 
 #[test]
@@ -102,7 +102,7 @@ fn test_phone_e164_accessors() {
 fn test_phone_e164_roundtrip() {
     let original = "+33123456789";
     let phone = PhoneE164::try_from(original).unwrap();
-    let roundtrip = format!("{}", phone);
+    let roundtrip = format!("{phone}");
     assert_eq!(roundtrip, original);
     let phone2 = PhoneE164::try_from(roundtrip.as_str()).unwrap();
     assert_eq!(phone2.country_code(), "33");
@@ -112,19 +112,19 @@ fn test_phone_e164_roundtrip() {
 #[test]
 fn test_domain_name_try_from_valid() {
     let domain = DomainName::try_from("example.com").unwrap();
-    assert_eq!(format!("{}", domain), "example.com");
+    assert_eq!(format!("{domain}"), "example.com");
 }
 
 #[test]
 fn test_domain_name_try_from_subdomain() {
     let domain = DomainName::try_from("sub.example.co.uk").unwrap();
-    assert_eq!(format!("{}", domain), "sub.example.co.uk");
+    assert_eq!(format!("{domain}"), "sub.example.co.uk");
 }
 
 #[test]
 fn test_domain_name_try_from_localhost() {
     let domain = DomainName::try_from("localhost").unwrap();
-    assert_eq!(format!("{}", domain), "localhost");
+    assert_eq!(format!("{domain}"), "localhost");
 }
 
 #[test]
@@ -171,8 +171,8 @@ fn test_domain_name_try_from_scheme() {
 fn test_domain_name_roundtrip() {
     let original = "Sub.Example.Co.UK";
     let domain = DomainName::try_from(original).unwrap();
-    let roundtrip = format!("{}", domain);
+    let roundtrip = format!("{domain}");
     assert_eq!(roundtrip, "sub.example.co.uk");
     let domain2 = DomainName::try_from(roundtrip.as_str()).unwrap();
-    assert_eq!(format!("{}", domain2), "sub.example.co.uk");
+    assert_eq!(format!("{domain2}"), "sub.example.co.uk");
 }

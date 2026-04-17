@@ -3,19 +3,19 @@ use fraiseql_validators::identifiers::{Color, Locale, Semver, Slug, Vin};
 #[test]
 fn test_slug_try_from_valid() {
     let slug = Slug::try_from("hello-world").unwrap();
-    assert_eq!(format!("{}", slug), "hello-world");
+    assert_eq!(format!("{slug}"), "hello-world");
 }
 
 #[test]
 fn test_slug_try_from_single_char() {
     let slug = Slug::try_from("a").unwrap();
-    assert_eq!(format!("{}", slug), "a");
+    assert_eq!(format!("{slug}"), "a");
 }
 
 #[test]
 fn test_slug_try_from_with_numbers() {
     let slug = Slug::try_from("hello-world-123").unwrap();
-    assert_eq!(format!("{}", slug), "hello-world-123");
+    assert_eq!(format!("{slug}"), "hello-world-123");
 }
 
 #[test]
@@ -68,7 +68,7 @@ fn test_color_try_from_hex6() {
     assert_eq!(color.green(), 87);
     assert_eq!(color.blue(), 51);
     assert_eq!(color.to_hex(), "#FF5733");
-    assert_eq!(format!("{}", color), "#FF5733");
+    assert_eq!(format!("{color}"), "#FF5733");
 }
 
 #[test]
@@ -125,7 +125,7 @@ fn test_color_luminance() {
 #[test]
 fn test_locale_try_from_valid() {
     let locale = Locale::try_from("en").unwrap();
-    assert_eq!(format!("{}", locale), "en");
+    assert_eq!(format!("{locale}"), "en");
     assert_eq!(locale.language(), "en");
     assert_eq!(locale.region(), None);
     assert_eq!(locale.script(), None);
@@ -186,7 +186,7 @@ fn test_semver_try_from_valid() {
     assert_eq!(semver.patch(), 0);
     assert_eq!(semver.pre_release(), None);
     assert_eq!(semver.build_metadata(), None);
-    assert_eq!(format!("{}", semver), "1.0.0");
+    assert_eq!(format!("{semver}"), "1.0.0");
 }
 
 #[test]
@@ -197,7 +197,7 @@ fn test_semver_try_from_with_pre_release() {
     assert_eq!(semver.patch(), 0);
     assert_eq!(semver.pre_release(), Some("alpha.1"));
     assert_eq!(semver.build_metadata(), None);
-    assert_eq!(format!("{}", semver), "1.0.0-alpha.1");
+    assert_eq!(format!("{semver}"), "1.0.0-alpha.1");
 }
 
 #[test]
@@ -208,7 +208,7 @@ fn test_semver_try_from_with_build() {
     assert_eq!(semver.patch(), 0);
     assert_eq!(semver.pre_release(), Some("alpha.1"));
     assert_eq!(semver.build_metadata(), Some("build.123"));
-    assert_eq!(format!("{}", semver), "1.0.0-alpha.1+build.123");
+    assert_eq!(format!("{semver}"), "1.0.0-alpha.1+build.123");
 }
 
 #[test]
@@ -287,14 +287,14 @@ fn test_semver_ordering() {
 fn test_semver_roundtrip() {
     let original = "1.0.0-alpha.1+build.123";
     let semver = Semver::try_from(original).unwrap();
-    let roundtrip = format!("{}", semver);
+    let roundtrip = format!("{semver}");
     assert_eq!(roundtrip, original);
 }
 
 #[test]
 fn test_vin_try_from_valid() {
     let vin = Vin::try_from("1HGBH41JXMN109186").unwrap();
-    assert_eq!(format!("{}", vin), "1HGBH41JXMN109186");
+    assert_eq!(format!("{vin}"), "1HGBH41JXMN109186");
     assert_eq!(vin.wmi(), "1HG");
     assert_eq!(vin.vds(), "BH41JX");
     assert_eq!(vin.vis(), "MN109186");
@@ -305,7 +305,7 @@ fn test_vin_try_from_valid() {
 #[test]
 fn test_vin_try_from_lowercase() {
     let vin = Vin::try_from("1hgbh41jxmn109186").unwrap();
-    assert_eq!(format!("{}", vin), "1HGBH41JXMN109186");
+    assert_eq!(format!("{vin}"), "1HGBH41JXMN109186");
 }
 
 #[test]
