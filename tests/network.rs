@@ -1,4 +1,4 @@
-use fraiseql_validators::network::{Port, MacAddressEui48};
+use fraiseql_validators::network::{Port, MacAddressEui48, MacAddressEui64};
 
 #[test]
 fn test_port_try_from_valid() {
@@ -137,4 +137,39 @@ fn test_mac_address_eui48_is_locally_administered() {
     assert!(!global.is_locally_administered());
     let local = MacAddressEui48::try_from("02:1A:2B:3C:4D:5E").unwrap();
     assert!(local.is_locally_administered());
+}
+
+#[test]
+fn test_mac_address_eui64_try_from_colon_separated() {
+    let mac = MacAddressEui64::try_from("00:1A:2B:FF:FE:3C:4D:5E").unwrap();
+    assert_eq!(mac.to_canonical(), "00:1a:2b:ff:fe:3c:4d:5e");
+    assert_eq!(mac.octets(), [0x00, 0x1A, 0x2B, 0xFF, 0xFE, 0x3C, 0x4D, 0x5E]);
+}
+
+#[test]
+fn test_mac_address_eui64_try_from_hyphen_separated() {
+    let mac = MacAddressEui64::try_from("00-1A-2B-FF-FE-3C-4D-5E").unwrap();
+    assert_eq!(mac.to_canonical(), "00:1a:2b:ff:fe:3c:4d:5e");
+}
+
+#[test]
+fn test_mac_address_eui64_try_from_no_separators() {
+    let mac = MacAddressEui64::try_from("001A2BFFFE3C4D5E").unwrap();
+    assert_eq!(mac.to_canonical(), "00:1a:2b:ff:fe:3c:4d:5e");
+}
+
+#[test]
+fn test_mac_address_eui64_try_from_eui48_length() {
+    let result = MacAddressEui64::try_from("00:1A:2B:3C:4D:5E");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, "MAC address must be exactly 8 octets");
+}
+
+#[test]
+fn test_mac_address_eui64_from_eui48() {
+    let eui48 = MacAddressEui48::try_from("00:1A:2B:3C:4D:5E").unwrap();
+    let eui64 = MacAddressEui64::from_eui48(&eui48);
+    assert_eq!(eui64.to_canonical(), "00:1a:2b:ff:fe:3c:4d:5e");
+    assert_eq!(eui64.octets(), [0x00, 0x1A, 0x2B, 0xFF, 0xFE, 0x3C, 0x4D, 0x5E]);
 }

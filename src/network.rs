@@ -9,6 +9,9 @@ pub struct Port(u16);
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct MacAddressEui48([u8; 6]);
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct MacAddressEui64([u8; 8]);
+
 impl Port {
     pub const HTTP: Self = Self(80);
     pub const HTTPS: Self = Self(443);
@@ -134,6 +137,46 @@ impl core::convert::TryFrom<&str> for MacAddressEui48 {
 }
 
 impl fmt::Display for MacAddressEui48 {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.to_canonical())
+    }
+}
+
+impl MacAddressEui64 {
+    #[must_use]
+    pub fn to_canonical(&self) -> String {
+        format!(
+            "{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}:{:02x}",
+            self.0[0], self.0[1], self.0[2], self.0[3], self.0[4], self.0[5], self.0[6], self.0[7]
+        )
+    }
+
+    #[must_use]
+    pub const fn octets(&self) -> [u8; 8] {
+        self.0
+    }
+
+    #[must_use]
+    pub fn from_eui48(mac: &MacAddressEui48) -> Self {
+        let mut octets = [0u8; 8];
+        octets[0..3].copy_from_slice(&mac.0[0..3]);
+        octets[3..5].copy_from_slice(&[0xFF, 0xFE]);
+        octets[5..8].copy_from_slice(&mac.0[3..6]);
+        Self(octets)
+    }
+}
+
+impl core::convert::TryFrom<&str> for MacAddressEui64 {
+    type Error = ValidationError;
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        let mut octets = [0u8; 8];
+        parse_hex_octets(value, &mut octets)?;
+        Ok(Self(octets))
+    }
+}
+
+impl fmt::Display for MacAddressEui64 {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(f, "{}", self.to_canonical())
     }
