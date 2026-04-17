@@ -1,4 +1,6 @@
-use fraiseql_validators::geographic::{CountryCode, CountryCodeAlpha3, LanguageCode, Latitude, Longitude};
+use fraiseql_validators::geographic::{
+    CountryCode, CountryCodeAlpha3, LanguageCode, Latitude, Longitude, PostalCode, IataAirportCode, IcaoAirportCode, IanaTimezone,
+};
 
 #[test]
 fn test_country_code_try_from_valid() {
@@ -76,9 +78,9 @@ fn test_language_code_try_from_valid() {
 
 #[test]
 fn test_language_code_try_from_3_letter() {
-    let lang = LanguageCode::try_from("fra").unwrap();
-    assert_eq!(lang.primary(), "fra");
-    assert_eq!(format!("{}", lang), "fra");
+    let lang = LanguageCode::try_from("aaa").unwrap();
+    assert_eq!(lang.primary(), "aaa");
+    assert_eq!(format!("{}", lang), "aaa");
 }
 
 #[test]
@@ -183,4 +185,149 @@ fn test_longitude_try_from_out_of_range() {
 fn test_longitude_try_from_string() {
     let lon = Longitude::try_from("-122.4194").unwrap();
     assert_eq!(lon.degrees(), -122.4194);
+}
+
+#[test]
+fn test_postal_code_try_from_fr_valid() {
+    let postal = PostalCode::try_from("FR:75001").unwrap();
+    assert_eq!(postal.country(), "FR");
+    assert_eq!(postal.code(), "75001");
+    assert_eq!(format!("{}", postal), "FR:75001");
+}
+
+#[test]
+fn test_postal_code_try_from_gb_valid() {
+    let postal = PostalCode::try_from("GB:SW1A1AA").unwrap();
+    assert_eq!(postal.country(), "GB");
+    assert_eq!(postal.code(), "SW1A1AA");
+}
+
+#[test]
+fn test_postal_code_try_from_gb_with_spaces() {
+    let postal = PostalCode::try_from("GB:SW1A 1AA").unwrap();
+    assert_eq!(postal.country(), "GB");
+    assert_eq!(postal.code(), "SW1A1AA");
+}
+
+#[test]
+fn test_postal_code_try_from_us_invalid() {
+    let result = PostalCode::try_from("US:1000");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, "invalid postal code format for country US");
+}
+
+#[test]
+fn test_postal_code_try_from_invalid_format() {
+    let result = PostalCode::try_from("INVALID");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, "invalid format, expected COUNTRY:CODE");
+}
+
+#[test]
+fn test_postal_code_try_from_unknown_country() {
+    let postal = PostalCode::try_from("ZZ:12345").unwrap();
+    assert_eq!(postal.country(), "ZZ");
+    assert_eq!(postal.code(), "12345");
+}
+
+#[test]
+fn test_postal_code_belongs_to_country() {
+    let postal = PostalCode::try_from("FR:75001").unwrap();
+    assert!(postal.belongs_to_country("FR"));
+    assert!(!postal.belongs_to_country("US"));
+}
+
+#[test]
+fn test_iata_airport_code_try_from_valid() {
+    let code = IataAirportCode::try_from("CDG").unwrap();
+    assert_eq!(code.as_str(), "CDG");
+    assert_eq!(format!("{}", code), "CDG");
+}
+
+#[test]
+fn test_iata_airport_code_try_from_lowercase() {
+    let code = IataAirportCode::try_from("jfk").unwrap();
+    assert_eq!(code.as_str(), "JFK");
+}
+
+#[test]
+fn test_iata_airport_code_try_from_invalid() {
+    let result = IataAirportCode::try_from("ZZZ");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, String::from("not a valid IATA airport code"));
+}
+
+#[test]
+fn test_iata_airport_code_try_from_wrong_length() {
+    let result = IataAirportCode::try_from("CD");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, String::from("must be exactly 3 characters"));
+}
+
+#[test]
+fn test_icao_airport_code_try_from_valid() {
+    let code = IcaoAirportCode::try_from("LFPG").unwrap();
+    assert_eq!(code.as_str(), "LFPG");
+    assert_eq!(format!("{}", code), "LFPG");
+}
+
+#[test]
+fn test_icao_airport_code_try_from_lowercase() {
+    let code = IcaoAirportCode::try_from("kjfk").unwrap();
+    assert_eq!(code.as_str(), "KJFK");
+}
+
+#[test]
+fn test_icao_airport_code_try_from_invalid() {
+    let result = IcaoAirportCode::try_from("ZZZZ");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, String::from("not a valid ICAO airport code"));
+}
+
+#[test]
+fn test_icao_airport_code_try_from_wrong_length() {
+    let result = IcaoAirportCode::try_from("LFP");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, String::from("must be exactly 4 characters"));
+}
+
+#[test]
+fn test_iana_timezone_try_from_valid() {
+    let tz = IanaTimezone::try_from("Europe/Paris").unwrap();
+    assert_eq!(tz.as_str(), "Europe/Paris");
+    assert_eq!(format!("{}", tz), "Europe/Paris");
+}
+
+#[test]
+fn test_iana_timezone_try_from_america() {
+    let tz = IanaTimezone::try_from("America/New_York").unwrap();
+    assert_eq!(tz.as_str(), "America/New_York");
+}
+
+#[test]
+fn test_iana_timezone_try_from_utc() {
+    let tz = IanaTimezone::try_from("UTC").unwrap();
+    assert_eq!(tz.as_str(), "UTC");
+}
+
+#[test]
+fn test_iana_timezone_try_from_invalid() {
+    let result = IanaTimezone::try_from("Europe/Atlantis");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, String::from("not a valid IANA timezone"));
+}
+
+#[test]
+fn test_iana_timezone_try_from_empty() {
+    let result = IanaTimezone::try_from("");
+    assert!(result.is_err());
+    let err = result.unwrap_err();
+    assert_eq!(err.reason, String::from("empty string"));
 }

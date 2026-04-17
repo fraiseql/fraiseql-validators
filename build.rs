@@ -1,5 +1,6 @@
 // Reusable build helpers for CSV whitelist code generation
 use std::env;
+use std::fmt::Write;
 use std::fs;
 use std::path::Path;
 
@@ -53,11 +54,9 @@ fn read_iana_language_subtags(path: &Path) -> Vec<String> {
             is_language_type = false;
         } else if line.starts_with("Type:") {
             is_language_type = line.contains("language");
-        } else if line.starts_with("Subtag:") {
-            if is_language_type {
-                if let Some(value) = line.split(':').nth(1) {
-                    current_subtag = value.trim().to_string();
-                }
+        } else if line.starts_with("Subtag:") && is_language_type {
+            if let Some(value) = line.split(':').nth(1) {
+                current_subtag = value.trim().to_string();
             }
         }
     }
@@ -70,6 +69,41 @@ fn read_iana_language_subtags(path: &Path) -> Vec<String> {
     languages
 }
 
+fn read_airports(path: &Path) -> (Vec<String>, Vec<String>) {
+    let mut rdr = csv::Reader::from_path(path).expect("Failed to read airports CSV");
+    let mut iata_codes = Vec::new();
+    let mut icao_codes = Vec::new();
+
+    for result in rdr.records() {
+        let record = result.expect("Failed to parse CSV record");
+        if let (Some(iata), Some(icao)) = (record.get(13), record.get(12)) {
+            if !iata.is_empty() {
+                iata_codes.push(iata.to_string());
+            }
+            if !icao.is_empty() {
+                icao_codes.push(icao.to_string());
+            }
+        }
+    }
+
+    (iata_codes, icao_codes)
+}
+
+fn read_iana_timezones(path: &Path) -> Vec<String> {
+    let content = fs::read_to_string(path).expect("Failed to read zone.tab");
+    let mut timezones = content
+        .lines()
+        .filter(|line| !line.starts_with('#') && !line.trim().is_empty())
+        .filter_map(|line| {
+            let parts: Vec<&str> = line.split('\t').collect();
+            parts.get(2).map(|s| s.to_string())
+        })
+        .collect::<Vec<_>>();
+    // Add special timezones
+    timezones.push("UTC".to_string());
+    timezones
+}
+
 fn emit_sorted_str_set(name: &str, values: &[String]) -> String {
     let mut sorted = values.to_vec();
     sorted.sort();
@@ -78,14 +112,14 @@ fn emit_sorted_str_set(name: &str, values: &[String]) -> String {
     let const_name = name;
     let fn_name = format!("is_valid_{}", name.to_lowercase());
 
-    let mut code = format!("pub const {}: &[&str] = &[\n", const_name);
+    let mut code = format!("pub const {const_name}: &[&str] = &[\n");
     for value in &sorted {
-        code.push_str(&format!("    \"{}\",\n", value));
+        let _ = write!(code, "    \"{value}\",\n");
     }
     code.push_str("];\n\n");
 
-    code.push_str(&format!("pub fn {}(s: &str) -> bool {{\n", fn_name));
-    code.push_str(&format!("    {}.binary_search(&s).is_ok()\n", const_name));
+    let _ = write!(code, "pub fn {fn_name}(s: &str) -> bool {{\n");
+    let _ = write!(code, "    {const_name}.binary_search(&s).is_ok()\n");
     code.push_str("}\n");
 
     code
@@ -100,7 +134,7 @@ fn main() {
     let currency_code = emit_sorted_str_set("CURRENCY_CODES", &currencies);
     let currency_dest = Path::new(&out_dir).join("currency_codes.rs");
     fs::write(&currency_dest, currency_code).unwrap();
-    println!("cargo:rerun-if-changed={}", currencies_csv);
+    println!("cargo:rerun-if-changed={currencies_csv}");
 
     // Generate MIC codes
     let mic_csv = "data/iso10383_mic.csv";
@@ -108,7 +142,7 @@ fn main() {
     let mic_code = emit_sorted_str_set("MIC_CODES", &mics);
     let mic_dest = Path::new(&out_dir).join("mic_codes.rs");
     fs::write(&mic_dest, mic_code).unwrap();
-    println!("cargo:rerun-if-changed={}", mic_csv);
+    println!("cargo:rerun-if-changed={mic_csv}");
 
     // Generate country codes
     let countries_csv = "data/iso3166_countries.csv";
@@ -128,7 +162,7 @@ fn main() {
     );
     let country_dest = Path::new(&out_dir).join("country_codes.rs");
     fs::write(&country_dest, country_code).unwrap();
-    println!("cargo:rerun-if-changed={}", countries_csv);
+    println!("cargo:rerun-if-changed={countries_csv}");
 
     // Generate language codes
     let languages_txt = "data/iana_language_subtags.txt";
@@ -136,5 +170,25 @@ fn main() {
     let language_code = emit_sorted_str_set("LANGUAGE_CODES", &languages);
     let language_dest = Path::new(&out_dir).join("language_codes.rs");
     fs::write(&language_dest, language_code).unwrap();
-    println!("cargo:rerun-if-changed={}", languages_txt);
+    println!("cargo:rerun-if-changed={languages_txt}");
+
+    // Generate airport codes
+    let airports_csv = "data/ourairports_airports.csv";
+    let (iata_codes, icao_codes) = read_airports(Path::new(airports_csv));
+    let airport_code = format!(
+        "{}\n{}",
+        emit_sorted_str_set("IATA_AIRPORT_CODES", &iata_codes),
+        emit_sorted_str_set("ICAO_AIRPORT_CODES", &icao_codes)
+    );
+    let airport_dest = Path::new(&out_dir).join("airport_codes.rs");
+    fs::write(&airport_dest, airport_code).unwrap();
+    println!("cargo:rerun-if-changed={airports_csv}");
+
+    // Generate timezone codes
+    let timezones_txt = "data/iana_zone_tab.txt";
+    let timezones = read_iana_timezones(Path::new(timezones_txt));
+    let timezone_code = emit_sorted_str_set("IANA_TIMEZONES", &timezones);
+    let timezone_dest = Path::new(&out_dir).join("timezone_codes.rs");
+    fs::write(&timezone_dest, timezone_code).unwrap();
+    println!("cargo:rerun-if-changed={timezones_txt}");
 }

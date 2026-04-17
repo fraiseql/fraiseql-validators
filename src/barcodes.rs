@@ -40,7 +40,7 @@ impl core::convert::TryFrom<&str> for Ean8 {
             return Err(ValidationError {
                 type_name: "Ean8",
                 input: String::from(value),
-                reason: "must be exactly 8 characters",
+                reason: String::from("must be exactly 8 characters"),
             });
         }
 
@@ -52,7 +52,7 @@ impl core::convert::TryFrom<&str> for Ean8 {
                 return Err(ValidationError {
                     type_name: "Ean8",
                     input: String::from(value),
-                    reason: "must contain only digits",
+                    reason: String::from("must contain only digits"),
                 });
             }
         }
@@ -61,7 +61,7 @@ impl core::convert::TryFrom<&str> for Ean8 {
             return Err(ValidationError {
                 type_name: "Ean8",
                 input: String::from(value),
-                reason: "invalid check digit",
+                reason: String::from("invalid check digit"),
             });
         }
 
@@ -97,7 +97,7 @@ impl core::convert::TryFrom<&str> for Ean13 {
             return Err(ValidationError {
                 type_name: "Ean13",
                 input: String::from(value),
-                reason: "must be exactly 13 characters",
+                reason: String::from("must be exactly 13 characters"),
             });
         }
 
@@ -109,7 +109,7 @@ impl core::convert::TryFrom<&str> for Ean13 {
                 return Err(ValidationError {
                     type_name: "Ean13",
                     input: String::from(value),
-                    reason: "must contain only digits",
+                    reason: String::from("must contain only digits"),
                 });
             }
         }
@@ -118,7 +118,7 @@ impl core::convert::TryFrom<&str> for Ean13 {
             return Err(ValidationError {
                 type_name: "Ean13",
                 input: String::from(value),
-                reason: "invalid check digit",
+                reason: String::from("invalid check digit"),
             });
         }
 
@@ -156,7 +156,7 @@ impl core::convert::TryFrom<&str> for UpcA {
             return Err(ValidationError {
                 type_name: "UpcA",
                 input: String::from(value),
-                reason: "must be exactly 12 characters",
+                reason: String::from("must be exactly 12 characters"),
             });
         }
 
@@ -168,7 +168,7 @@ impl core::convert::TryFrom<&str> for UpcA {
                 return Err(ValidationError {
                     type_name: "UpcA",
                     input: String::from(value),
-                    reason: "must contain only digits",
+                    reason: String::from("must contain only digits"),
                 });
             }
         }
@@ -177,7 +177,7 @@ impl core::convert::TryFrom<&str> for UpcA {
             return Err(ValidationError {
                 type_name: "UpcA",
                 input: String::from(value),
-                reason: "invalid check digit",
+                reason: String::from("invalid check digit"),
             });
         }
 
@@ -222,7 +222,7 @@ impl core::convert::TryFrom<&str> for Isbn13 {
             return Err(ValidationError {
                 type_name: "Isbn13",
                 input: String::from(value),
-                reason: "ISBN-13 must have prefix 978 or 979",
+                reason: String::from("ISBN-13 must have prefix 978 or 979"),
             });
         }
 
@@ -268,7 +268,7 @@ impl core::convert::TryFrom<&str> for Issn {
             return Err(ValidationError {
                 type_name: "Issn",
                 input: String::from(value),
-                reason: "must be exactly 8 characters (excluding hyphens)",
+                reason: String::from("must be exactly 8 characters (excluding hyphens)"),
             });
         }
 
@@ -281,7 +281,7 @@ impl core::convert::TryFrom<&str> for Issn {
                     return Err(ValidationError {
                         type_name: "Issn",
                         input: String::from(value),
-                        reason: "first 7 characters must be digits",
+                        reason: String::from("first 7 characters must be digits"),
                     });
                 }
             } else {
@@ -294,7 +294,7 @@ impl core::convert::TryFrom<&str> for Issn {
                     return Err(ValidationError {
                         type_name: "Issn",
                         input: String::from(value),
-                        reason: "last character must be digit or 'X'",
+                        reason: String::from("last character must be digit or 'X'"),
                     });
                 }
             }
@@ -309,13 +309,17 @@ impl core::convert::TryFrom<&str> for Issn {
         }
 
         let check = (11 - (sum % 11)) % 11;
-        let expected_check = if check == 10 { b'X' } else { b'0' + check as u8 };
+        let expected_check = if check == 10 {
+            b'X'
+        } else {
+            b'0' + check as u8
+        };
 
         if digits[7] != expected_check {
             return Err(ValidationError {
                 type_name: "Issn",
                 input: String::from(value),
-                reason: "invalid check character",
+                reason: String::from("invalid check character"),
             });
         }
 
@@ -362,7 +366,7 @@ impl core::convert::TryFrom<&str> for Gtin14 {
             return Err(ValidationError {
                 type_name: "Gtin14",
                 input: String::from(value),
-                reason: "must be exactly 14 characters",
+                reason: String::from("must be exactly 14 characters"),
             });
         }
 
@@ -374,7 +378,7 @@ impl core::convert::TryFrom<&str> for Gtin14 {
                 return Err(ValidationError {
                     type_name: "Gtin14",
                     input: String::from(value),
-                    reason: "must contain only digits",
+                    reason: String::from("must contain only digits"),
                 });
             }
         }
@@ -383,12 +387,10 @@ impl core::convert::TryFrom<&str> for Gtin14 {
             return Err(ValidationError {
                 type_name: "Gtin14",
                 input: String::from(value),
-                reason: "invalid check digit",
+                reason: String::from("invalid check digit"),
             });
         }
 
         Ok(Gtin14(digits))
     }
 }
-
-

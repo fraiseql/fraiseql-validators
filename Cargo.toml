@@ -30,4 +30,4 @@ regex-lite = "0.1"
 once_cell = { version = "1.0", features = ["alloc", "std"], default-features = false }
 
 [build-dependencies]
-# none
+csv = "1.3"

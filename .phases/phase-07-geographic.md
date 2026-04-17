@@ -200,4 +200,4 @@ IANA timezone name: validated against zone.tab. ~600 entries. Examples: `Europe/
 
 ## Status
 
-[x] Cycles 1-3 Complete (CountryCode, CountryCodeAlpha3, LanguageCode, Latitude, Longitude)
+[x] Complete

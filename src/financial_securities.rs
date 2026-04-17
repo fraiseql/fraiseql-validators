@@ -65,7 +65,7 @@ impl core::convert::TryFrom<&str> for Cusip {
             return Err(ValidationError {
                 type_name: "Cusip",
                 input: String::from(value),
-                reason: "empty string",
+                reason: String::from("empty string"),
             });
         }
 
@@ -73,7 +73,7 @@ impl core::convert::TryFrom<&str> for Cusip {
             return Err(ValidationError {
                 type_name: "Cusip",
                 input: String::from(value),
-                reason: "CUSIP must be exactly 9 characters",
+                reason: String::from("CUSIP must be exactly 9 characters"),
             });
         }
 
@@ -85,7 +85,7 @@ impl core::convert::TryFrom<&str> for Cusip {
                 return Err(ValidationError {
                     type_name: "Cusip",
                     input: String::from(value),
-                    reason: "invalid CUSIP character",
+                    reason: String::from("invalid CUSIP character"),
                 });
             }
         }
@@ -103,7 +103,7 @@ impl core::convert::TryFrom<&str> for Cusip {
             return Err(ValidationError {
                 type_name: "Cusip",
                 input: String::from(value),
-                reason: "checksum validation failed",
+                reason: String::from("checksum validation failed"),
             });
         }
 
@@ -178,7 +178,7 @@ impl core::convert::TryFrom<&str> for Sedol {
             return Err(ValidationError {
                 type_name: "Sedol",
                 input: String::from(value),
-                reason: "empty string",
+                reason: String::from("empty string"),
             });
         }
 
@@ -186,7 +186,7 @@ impl core::convert::TryFrom<&str> for Sedol {
             return Err(ValidationError {
                 type_name: "Sedol",
                 input: String::from(value),
-                reason: "SEDOL must be exactly 7 characters",
+                reason: String::from("SEDOL must be exactly 7 characters"),
             });
         }
 
@@ -199,7 +199,7 @@ impl core::convert::TryFrom<&str> for Sedol {
                 return Err(ValidationError {
                     type_name: "Sedol",
                     input: String::from(value),
-                    reason: "invalid SEDOL character or vowel in positions 1-6",
+                    reason: String::from("invalid SEDOL character or vowel in positions 1-6"),
                 });
             }
         }
@@ -209,7 +209,7 @@ impl core::convert::TryFrom<&str> for Sedol {
             return Err(ValidationError {
                 type_name: "Sedol",
                 input: String::from(value),
-                reason: "last character must be a digit",
+                reason: String::from("last character must be a digit"),
             });
         }
 
@@ -223,7 +223,7 @@ impl core::convert::TryFrom<&str> for Sedol {
             return Err(ValidationError {
                 type_name: "Sedol",
                 input: String::from(value),
-                reason: "checksum validation failed",
+                reason: String::from("checksum validation failed"),
             });
         }
 
@@ -262,7 +262,7 @@ impl core::convert::TryFrom<&str> for Lei {
             return Err(ValidationError {
                 type_name: "Lei",
                 input: String::from(value),
-                reason: "empty string",
+                reason: String::from("empty string"),
             });
         }
 
@@ -270,7 +270,7 @@ impl core::convert::TryFrom<&str> for Lei {
             return Err(ValidationError {
                 type_name: "Lei",
                 input: String::from(value),
-                reason: "LEI must be exactly 20 characters",
+                reason: String::from("LEI must be exactly 20 characters"),
             });
         }
 
@@ -283,7 +283,7 @@ impl core::convert::TryFrom<&str> for Lei {
                 return Err(ValidationError {
                     type_name: "Lei",
                     input: String::from(value),
-                    reason: "first 18 characters must be alphanumeric",
+                    reason: String::from("first 18 characters must be alphanumeric"),
                 });
             }
         }
@@ -294,7 +294,7 @@ impl core::convert::TryFrom<&str> for Lei {
                 return Err(ValidationError {
                     type_name: "Lei",
                     input: String::from(value),
-                    reason: "last 2 characters must be digits",
+                    reason: String::from("last 2 characters must be digits"),
                 });
             }
         }
@@ -330,7 +330,7 @@ impl core::convert::TryFrom<&str> for Lei {
             return Err(ValidationError {
                 type_name: "Lei",
                 input: String::from(value),
-                reason: "checksum validation failed",
+                reason: String::from("checksum validation failed"),
             });
         }
 
@@ -376,7 +376,7 @@ impl core::convert::TryFrom<&str> for Figi {
             return Err(ValidationError {
                 type_name: "Figi",
                 input: String::from(value),
-                reason: "empty string",
+                reason: String::from("empty string"),
             });
         }
 
@@ -384,7 +384,7 @@ impl core::convert::TryFrom<&str> for Figi {
             return Err(ValidationError {
                 type_name: "Figi",
                 input: String::from(value),
-                reason: "FIGI must be exactly 12 characters",
+                reason: String::from("FIGI must be exactly 12 characters"),
             });
         }
 
@@ -396,7 +396,7 @@ impl core::convert::TryFrom<&str> for Figi {
             return Err(ValidationError {
                 type_name: "Figi",
                 input: String::from(value),
-                reason: "first 2 characters must be consonants",
+                reason: String::from("first 2 characters must be consonants"),
             });
         }
 
@@ -405,7 +405,7 @@ impl core::convert::TryFrom<&str> for Figi {
             return Err(ValidationError {
                 type_name: "Figi",
                 input: String::from(value),
-                reason: "third character must be 'G'",
+                reason: String::from("third character must be 'G'"),
             });
         }
 
@@ -415,7 +415,7 @@ impl core::convert::TryFrom<&str> for Figi {
                 return Err(ValidationError {
                     type_name: "Figi",
                     input: String::from(value),
-                    reason: "characters 4-11 must be alphanumeric",
+                    reason: String::from("characters 4-11 must be alphanumeric"),
                 });
             }
         }
@@ -425,7 +425,7 @@ impl core::convert::TryFrom<&str> for Figi {
             return Err(ValidationError {
                 type_name: "Figi",
                 input: String::from(value),
-                reason: "last character must be a digit",
+                reason: String::from("last character must be a digit"),
             });
         }
 
@@ -435,7 +435,7 @@ impl core::convert::TryFrom<&str> for Figi {
             return Err(ValidationError {
                 type_name: "Figi",
                 input: String::from(value),
-                reason: "Luhn checksum validation failed",
+                reason: String::from("Luhn checksum validation failed"),
             });
         }
 
@@ -466,7 +466,7 @@ impl core::convert::TryFrom<&str> for Mic {
             return Err(ValidationError {
                 type_name: "Mic",
                 input: String::from(value),
-                reason: "MIC must be exactly 4 characters",
+                reason: String::from("MIC must be exactly 4 characters"),
             });
         }
 
@@ -478,7 +478,7 @@ impl core::convert::TryFrom<&str> for Mic {
                 return Err(ValidationError {
                     type_name: "Mic",
                     input: String::from(value),
-                    reason: "MIC must contain only uppercase letters",
+                    reason: String::from("MIC must contain only uppercase letters"),
                 });
             }
         }
@@ -488,7 +488,7 @@ impl core::convert::TryFrom<&str> for Mic {
             return Err(ValidationError {
                 type_name: "Mic",
                 input: String::from(value),
-                reason: "not a valid ISO 10383 MIC",
+                reason: String::from("not a valid ISO 10383 MIC"),
             });
         }
 

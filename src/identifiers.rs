@@ -29,7 +29,7 @@ impl core::convert::TryFrom<&str> for Slug {
             return Err(ValidationError {
                 type_name: "Slug",
                 input: String::from(value),
-                reason: "empty string",
+                reason: String::from("empty string"),
             });
         }
 
@@ -37,7 +37,7 @@ impl core::convert::TryFrom<&str> for Slug {
             return Err(ValidationError {
                 type_name: "Slug",
                 input: String::from(value),
-                reason: "starts with hyphen",
+                reason: String::from("starts with hyphen"),
             });
         }
 
@@ -45,7 +45,7 @@ impl core::convert::TryFrom<&str> for Slug {
             return Err(ValidationError {
                 type_name: "Slug",
                 input: String::from(value),
-                reason: "ends with hyphen",
+                reason: String::from("ends with hyphen"),
             });
         }
 
@@ -56,7 +56,7 @@ impl core::convert::TryFrom<&str> for Slug {
                     return Err(ValidationError {
                         type_name: "Slug",
                         input: String::from(value),
-                        reason: "consecutive hyphens",
+                        reason: String::from("consecutive hyphens"),
                     });
                 }
                 prev_was_hyphen = true;
@@ -65,7 +65,7 @@ impl core::convert::TryFrom<&str> for Slug {
                     return Err(ValidationError {
                         type_name: "Slug",
                         input: String::from(value),
-                        reason: "contains invalid character (must be lowercase letters, digits, or hyphens)",
+                        reason: String::from("contains invalid character (must be lowercase letters, digits, or hyphens)"),
                     });
                 }
                 prev_was_hyphen = false;
@@ -78,7 +78,7 @@ impl core::convert::TryFrom<&str> for Slug {
 
 /// Color: accepts `#RRGGBB` or `#RGB`; stores as packed 24-bit `u32`.
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
-pub struct Color(u32);  // packed: 0x00RRGGBB
+pub struct Color(u32); // packed: 0x00RRGGBB
 
 impl Color {
     /// Returns the red component (0-255).
@@ -109,9 +109,21 @@ impl Color {
         let b = self.blue() as f64 / 255.0;
 
         // Linearize each channel
-        let r_linear = if r <= 0.03928 { r / 12.92 } else { ((r + 0.055) / 1.055).powf(2.4) };
-        let g_linear = if g <= 0.03928 { g / 12.92 } else { ((g + 0.055) / 1.055).powf(2.4) };
-        let b_linear = if b <= 0.03928 { b / 12.92 } else { ((b + 0.055) / 1.055).powf(2.4) };
+        let r_linear = if r <= 0.03928 {
+            r / 12.92
+        } else {
+            ((r + 0.055) / 1.055).powf(2.4)
+        };
+        let g_linear = if g <= 0.03928 {
+            g / 12.92
+        } else {
+            ((g + 0.055) / 1.055).powf(2.4)
+        };
+        let b_linear = if b <= 0.03928 {
+            b / 12.92
+        } else {
+            ((b + 0.055) / 1.055).powf(2.4)
+        };
 
         // Combine with luminance coefficients
         0.2126 * r_linear + 0.7152 * g_linear + 0.0722 * b_linear
@@ -132,7 +144,7 @@ impl core::convert::TryFrom<&str> for Color {
             return Err(ValidationError {
                 type_name: "Color",
                 input: String::from(value),
-                reason: "must start with '#'",
+                reason: String::from("must start with '#'"),
             });
         }
 
@@ -146,11 +158,14 @@ impl core::convert::TryFrom<&str> for Color {
                 let g_nibble = hex_part.chars().nth(1).unwrap();
                 let b_nibble = hex_part.chars().nth(2).unwrap();
 
-                if !r_nibble.is_ascii_hexdigit() || !g_nibble.is_ascii_hexdigit() || !b_nibble.is_ascii_hexdigit() {
+                if !r_nibble.is_ascii_hexdigit()
+                    || !g_nibble.is_ascii_hexdigit()
+                    || !b_nibble.is_ascii_hexdigit()
+                {
                     return Err(ValidationError {
                         type_name: "Color",
                         input: String::from(value),
-                        reason: "invalid hex digits",
+                        reason: String::from("invalid hex digits"),
                     });
                 }
 
@@ -165,7 +180,7 @@ impl core::convert::TryFrom<&str> for Color {
                     return Err(ValidationError {
                         type_name: "Color",
                         input: String::from(value),
-                        reason: "invalid hex digits",
+                        reason: String::from("invalid hex digits"),
                     });
                 }
 
@@ -178,7 +193,7 @@ impl core::convert::TryFrom<&str> for Color {
                 return Err(ValidationError {
                     type_name: "Color",
                     input: String::from(value),
-                    reason: "must be 3 or 6 hex digits after '#'",
+                    reason: String::from("must be 3 or 6 hex digits after '#'"),
                 });
             }
         };
@@ -230,8 +245,10 @@ impl Locale {
     /// Returns the script subtag if present (titlecase).
     pub fn script(&self) -> Option<&str> {
         for part in self.0.split('-') {
-            if part.len() == 4 && part.chars().next().unwrap().is_ascii_uppercase()
-                && part.chars().skip(1).all(|c| c.is_ascii_lowercase()) {
+            if part.len() == 4
+                && part.chars().next().unwrap().is_ascii_uppercase()
+                && part.chars().skip(1).all(|c| c.is_ascii_lowercase())
+            {
                 return Some(part);
             }
         }
@@ -253,7 +270,7 @@ impl core::convert::TryFrom<&str> for Locale {
             return Err(ValidationError {
                 type_name: "Locale",
                 input: String::from(value),
-                reason: "empty string",
+                reason: String::from("empty string"),
             });
         }
 
@@ -268,7 +285,7 @@ impl core::convert::TryFrom<&str> for Locale {
             return Err(ValidationError {
                 type_name: "Locale",
                 input: String::from(value),
-                reason: "invalid format",
+                reason: String::from("invalid format"),
             });
         }
 
@@ -278,7 +295,7 @@ impl core::convert::TryFrom<&str> for Locale {
             return Err(ValidationError {
                 type_name: "Locale",
                 input: String::from(value),
-                reason: "language must be 2-3 lowercase letters",
+                reason: String::from("language must be 2-3 lowercase letters"),
             });
         }
 
@@ -291,12 +308,14 @@ impl core::convert::TryFrom<&str> for Locale {
             if len == 4 {
                 // Could be script or variant
                 if part.chars().next().unwrap().is_ascii_uppercase()
-                    && part.chars().skip(1).all(|c| c.is_ascii_lowercase()) {
+                    && part.chars().skip(1).all(|c| c.is_ascii_lowercase())
+                {
                     // Script
                     i += 1;
                     continue;
                 } else if part.chars().next().unwrap().is_ascii_digit()
-                    && part.chars().all(|c| c.is_ascii_alphanumeric()) {
+                    && part.chars().all(|c| c.is_ascii_alphanumeric())
+                {
                     // Variant
                     i += 1;
                     continue;
@@ -324,7 +343,7 @@ impl core::convert::TryFrom<&str> for Locale {
             return Err(ValidationError {
                 type_name: "Locale",
                 input: String::from(value),
-                reason: "invalid subtag format",
+                reason: String::from("invalid subtag format"),
             });
         }
 
@@ -377,17 +396,17 @@ impl Semver {
     /// Checks if this version is caret-compatible with the given base version.
     /// Compatible means same major, minor.patch >= base.minor.patch.
     pub fn caret_compatible_with(&self, base: &Semver) -> bool {
-        self.major == base.major &&
-        (self.minor > base.minor || (self.minor == base.minor && self.patch >= base.patch))
+        self.major == base.major
+            && (self.minor > base.minor || (self.minor == base.minor && self.patch >= base.patch))
     }
 }
 
 impl PartialEq for Semver {
     fn eq(&self, other: &Self) -> bool {
-        self.major == other.major &&
-        self.minor == other.minor &&
-        self.patch == other.patch &&
-        self.pre_release == other.pre_release
+        self.major == other.major
+            && self.minor == other.minor
+            && self.patch == other.patch
+            && self.pre_release == other.pre_release
         // build_metadata ignored for equality
     }
 }
@@ -403,8 +422,8 @@ impl PartialOrd for Semver {
 impl Ord for Semver {
     fn cmp(&self, other: &Self) -> core::cmp::Ordering {
         // 1. Compare major, minor, patch numerically
-        let core_cmp = (self.major, self.minor, self.patch)
-            .cmp(&(other.major, other.minor, other.patch));
+        let core_cmp =
+            (self.major, self.minor, self.patch).cmp(&(other.major, other.minor, other.patch));
 
         if core_cmp != core::cmp::Ordering::Equal {
             return core_cmp;
@@ -449,7 +468,7 @@ impl core::convert::TryFrom<&str> for Semver {
             return Err(ValidationError {
                 type_name: "Semver",
                 input: String::from(value),
-                reason: "empty string",
+                reason: String::from("empty string"),
             });
         }
 
@@ -464,7 +483,7 @@ impl core::convert::TryFrom<&str> for Semver {
             return Err(ValidationError {
                 type_name: "Semver",
                 input: String::from(value),
-                reason: "must have exactly 3 numeric parts separated by dots",
+                reason: String::from("must have exactly 3 numeric parts separated by dots"),
             });
         }
 
@@ -482,7 +501,7 @@ impl core::convert::TryFrom<&str> for Semver {
                     return Err(ValidationError {
                         type_name: "Semver",
                         input: String::from(value),
-                        reason: "invalid pre-release identifier",
+                        reason: String::from("invalid pre-release identifier"),
                     });
                 }
                 pre_release = Some(String::from(part));
@@ -491,7 +510,7 @@ impl core::convert::TryFrom<&str> for Semver {
                     return Err(ValidationError {
                         type_name: "Semver",
                         input: String::from(value),
-                        reason: "invalid build metadata",
+                        reason: String::from("invalid build metadata"),
                     });
                 }
                 build_metadata = Some(String::from(part));
@@ -514,7 +533,7 @@ fn parse_version_number(s: &str, full_input: &str) -> Result<u64, ValidationErro
         return Err(ValidationError {
             type_name: "Semver",
             input: String::from(full_input),
-            reason: "empty version component",
+            reason: String::from("empty version component"),
         });
     }
 
@@ -522,14 +541,14 @@ fn parse_version_number(s: &str, full_input: &str) -> Result<u64, ValidationErro
         return Err(ValidationError {
             type_name: "Semver",
             input: String::from(full_input),
-            reason: "version components cannot have leading zeros",
+            reason: String::from("version components cannot have leading zeros"),
         });
     }
 
     s.parse::<u64>().map_err(|_| ValidationError {
         type_name: "Semver",
         input: String::from(full_input),
-        reason: "invalid numeric version component",
+        reason: String::from("invalid numeric version component"),
     })
 }
 
@@ -607,7 +626,7 @@ fn compare_pre_release(a: &str, b: &str) -> core::cmp::Ordering {
 
 /// VIN (ISO 3779 / FMVSS 115): exactly 17 chars, [A-HJ-NPR-Z0-9]{17}
 #[derive(Clone, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
-pub struct Vin([u8; 17]);  // stored as uppercase ASCII
+pub struct Vin([u8; 17]); // stored as uppercase ASCII
 
 impl Vin {
     /// Returns the World Manufacturer Identifier (chars 0–2).
@@ -653,7 +672,7 @@ impl core::convert::TryFrom<&str> for Vin {
             return Err(ValidationError {
                 type_name: "Vin",
                 input: String::from(value),
-                reason: "must be exactly 17 characters",
+                reason: String::from("must be exactly 17 characters"),
             });
         }
 
@@ -663,7 +682,7 @@ impl core::convert::TryFrom<&str> for Vin {
                 return Err(ValidationError {
                     type_name: "Vin",
                     input: String::from(value),
-                    reason: "contains invalid character (must be A-H, J-N, P-R, S-Z, or 0-9, excluding I, O, Q)",
+                    reason: String::from("contains invalid character (must be A-H, J-N, P-R, S-Z, or 0-9, excluding I, O, Q)"),
                 });
             }
             vin_bytes[i] = c.to_ascii_uppercase() as u8;
@@ -675,7 +694,7 @@ impl core::convert::TryFrom<&str> for Vin {
             return Err(ValidationError {
                 type_name: "Vin",
                 input: String::from(value),
-                reason: "invalid check digit",
+                reason: String::from("invalid check digit"),
             });
         }
 
@@ -686,11 +705,11 @@ impl core::convert::TryFrom<&str> for Vin {
 /// Check if a character is valid in a VIN (A-H, J-N, P-R, S-Z, 0-9).
 fn is_valid_vin_char(c: char) -> bool {
     let upper = c.to_ascii_uppercase();
-    upper.is_ascii_digit() ||
-    (upper >= 'A' && upper <= 'H') ||
-    (upper >= 'J' && upper <= 'N') ||
-    (upper >= 'P' && upper <= 'R') ||
-    (upper >= 'S' && upper <= 'Z')
+    upper.is_ascii_digit()
+        || (upper >= 'A' && upper <= 'H')
+        || (upper >= 'J' && upper <= 'N')
+        || (upper >= 'P' && upper <= 'R')
+        || (upper >= 'S' && upper <= 'Z')
 }
 
 /// Calculate the check digit for a VIN.
@@ -707,7 +726,7 @@ fn calculate_vin_check_digit(vin: &[u8; 17]) -> u8 {
     }
 
     // Weights: 8,7,6,5,4,3,2,10,0,9,8,7,6,5,4,3,2
-    const WEIGHTS: [u8; 17] = [8,7,6,5,4,3,2,10,0,9,8,7,6,5,4,3,2];
+    const WEIGHTS: [u8; 17] = [8, 7, 6, 5, 4, 3, 2, 10, 0, 9, 8, 7, 6, 5, 4, 3, 2];
 
     let mut sum = 0u32;
     for i in 0..17 {

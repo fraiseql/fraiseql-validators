@@ -5,7 +5,7 @@ fn test_validation_error_fields() {
     let err = ValidationError {
         type_name: "TestType",
         input: "invalid input".into(),
-        reason: "some reason",
+        reason: String::from("some reason"),
     };
 
     assert_eq!(err.type_name, "TestType");
@@ -18,7 +18,7 @@ fn test_validation_error_display() {
     let err = ValidationError {
         type_name: "TestType",
         input: "invalid input".into(),
-        reason: "some reason",
+        reason: String::from("some reason"),
     };
 
     let display = format!("{}", err);

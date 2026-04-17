@@ -36,7 +36,7 @@ impl core::convert::TryFrom<&str> for Iban {
             return Err(ValidationError {
                 type_name: "Iban",
                 input: String::from(value),
-                reason: "empty string",
+                reason: String::from("empty string"),
             });
         }
 
@@ -44,7 +44,7 @@ impl core::convert::TryFrom<&str> for Iban {
             return Err(ValidationError {
                 type_name: "Iban",
                 input: String::from(value),
-                reason: "invalid length (15-34 characters)",
+                reason: String::from("invalid length (15-34 characters)"),
             });
         }
 
@@ -57,7 +57,7 @@ impl core::convert::TryFrom<&str> for Iban {
             return Err(ValidationError {
                 type_name: "Iban",
                 input: String::from(value),
-                reason: "country code must be two uppercase letters",
+                reason: String::from("country code must be two uppercase letters"),
             });
         }
 
@@ -66,7 +66,7 @@ impl core::convert::TryFrom<&str> for Iban {
             return Err(ValidationError {
                 type_name: "Iban",
                 input: String::from(value),
-                reason: "check digits must be two digits",
+                reason: String::from("check digits must be two digits"),
             });
         }
 
@@ -76,7 +76,7 @@ impl core::convert::TryFrom<&str> for Iban {
                 return Err(ValidationError {
                     type_name: "Iban",
                     input: String::from(value),
-                    reason: "BBAN must contain only alphanumeric characters",
+                    reason: String::from("BBAN must contain only alphanumeric characters"),
                 });
             }
         }
@@ -97,7 +97,7 @@ impl core::convert::TryFrom<&str> for Iban {
                 return Err(ValidationError {
                     type_name: "Iban",
                     input: String::from(value),
-                    reason: "invalid character in IBAN",
+                    reason: String::from("invalid character in IBAN"),
                 });
             };
 
@@ -116,7 +116,7 @@ impl core::convert::TryFrom<&str> for Iban {
             return Err(ValidationError {
                 type_name: "Iban",
                 input: String::from(value),
-                reason: "checksum validation failed",
+                reason: String::from("checksum validation failed"),
             });
         }
 
@@ -158,7 +158,7 @@ impl core::convert::TryFrom<&str> for Isin {
             return Err(ValidationError {
                 type_name: "Isin",
                 input: String::from(value),
-                reason: "empty string",
+                reason: String::from("empty string"),
             });
         }
 
@@ -166,7 +166,7 @@ impl core::convert::TryFrom<&str> for Isin {
             return Err(ValidationError {
                 type_name: "Isin",
                 input: String::from(value),
-                reason: "ISIN must be exactly 12 characters",
+                reason: String::from("ISIN must be exactly 12 characters"),
             });
         }
 
@@ -178,7 +178,7 @@ impl core::convert::TryFrom<&str> for Isin {
             return Err(ValidationError {
                 type_name: "Isin",
                 input: String::from(value),
-                reason: "last character must be a digit",
+                reason: String::from("last character must be a digit"),
             });
         }
 
@@ -187,7 +187,7 @@ impl core::convert::TryFrom<&str> for Isin {
             return Err(ValidationError {
                 type_name: "Isin",
                 input: String::from(value),
-                reason: "first two characters must be letters",
+                reason: String::from("first two characters must be letters"),
             });
         }
 
@@ -197,7 +197,7 @@ impl core::convert::TryFrom<&str> for Isin {
                 return Err(ValidationError {
                     type_name: "Isin",
                     input: String::from(value),
-                    reason: "characters 3-11 must be alphanumeric",
+                    reason: String::from("characters 3-11 must be alphanumeric"),
                 });
             }
         }
@@ -208,7 +208,7 @@ impl core::convert::TryFrom<&str> for Isin {
             return Err(ValidationError {
                 type_name: "Isin",
                 input: String::from(value),
-                reason: "Luhn checksum validation failed",
+                reason: String::from("Luhn checksum validation failed"),
             });
         }
 
@@ -239,7 +239,7 @@ impl core::convert::TryFrom<&str> for CurrencyCode {
             return Err(ValidationError {
                 type_name: "CurrencyCode",
                 input: String::from(value),
-                reason: "currency code must be exactly 3 characters",
+                reason: String::from("currency code must be exactly 3 characters"),
             });
         }
 
@@ -251,7 +251,7 @@ impl core::convert::TryFrom<&str> for CurrencyCode {
                 return Err(ValidationError {
                     type_name: "CurrencyCode",
                     input: String::from(value),
-                    reason: "currency code must contain only uppercase letters",
+                    reason: String::from("currency code must contain only uppercase letters"),
                 });
             }
         }
@@ -261,7 +261,7 @@ impl core::convert::TryFrom<&str> for CurrencyCode {
             return Err(ValidationError {
                 type_name: "CurrencyCode",
                 input: String::from(value),
-                reason: "not a valid ISO 4217 currency code",
+                reason: String::from("not a valid ISO 4217 currency code"),
             });
         }
 
@@ -311,7 +311,7 @@ impl core::convert::TryFrom<&str> for SwiftBic {
             return Err(ValidationError {
                 type_name: "SwiftBic",
                 input: String::from(value),
-                reason: "empty string",
+                reason: String::from("empty string"),
             });
         }
 
@@ -320,7 +320,7 @@ impl core::convert::TryFrom<&str> for SwiftBic {
             return Err(ValidationError {
                 type_name: "SwiftBic",
                 input: String::from(value),
-                reason: "BIC must be 8 or 11 characters",
+                reason: String::from("BIC must be 8 or 11 characters"),
             });
         }
 
@@ -333,7 +333,7 @@ impl core::convert::TryFrom<&str> for SwiftBic {
                 return Err(ValidationError {
                     type_name: "SwiftBic",
                     input: String::from(value),
-                    reason: "institution code must be 4 letters",
+                    reason: String::from("institution code must be 4 letters"),
                 });
             }
         }
@@ -344,7 +344,7 @@ impl core::convert::TryFrom<&str> for SwiftBic {
                 return Err(ValidationError {
                     type_name: "SwiftBic",
                     input: String::from(value),
-                    reason: "country code must be 2 letters",
+                    reason: String::from("country code must be 2 letters"),
                 });
             }
         }
@@ -355,7 +355,7 @@ impl core::convert::TryFrom<&str> for SwiftBic {
                 return Err(ValidationError {
                     type_name: "SwiftBic",
                     input: String::from(value),
-                    reason: "location code must be 2 alphanumeric characters",
+                    reason: String::from("location code must be 2 alphanumeric characters"),
                 });
             }
         }
@@ -367,7 +367,7 @@ impl core::convert::TryFrom<&str> for SwiftBic {
                     return Err(ValidationError {
                         type_name: "SwiftBic",
                         input: String::from(value),
-                        reason: "branch code must be 3 alphanumeric characters",
+                        reason: String::from("branch code must be 3 alphanumeric characters"),
                     });
                 }
             }

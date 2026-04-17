@@ -23,7 +23,7 @@ pub struct ValidationError {
     /// The original input string that was invalid.
     pub input: String,
     /// A human-readable description of why validation failed.
-    pub reason: &'static str,
+    pub reason: String,
 }
 
 impl fmt::Display for ValidationError {

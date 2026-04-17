@@ -56,6 +56,6 @@ Default features: all flags enabled. Consumers may opt out of any feature.
 | 04 | Financial — securities | [ ] Not Started |
 | 05 | Barcodes & product IDs | [ ] Not Started |
 | 06 | Identifiers | [ ] Not Started |
-| 07 | Geographic & locale | [ ] Not Started |
+| 07 | Geographic & locale | [x] Complete |
 | 08 | Networking | [ ] Not Started |
 | 09 | Finalize | [ ] Not Started |

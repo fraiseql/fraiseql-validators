@@ -49,7 +49,7 @@ impl core::convert::TryFrom<&str> for Email {
             return Err(ValidationError {
                 type_name: "Email",
                 input: String::from(value),
-                reason: "empty string",
+                reason: String::from("empty string"),
             });
         }
 
@@ -57,7 +57,7 @@ impl core::convert::TryFrom<&str> for Email {
             return Err(ValidationError {
                 type_name: "Email",
                 input: String::from(value),
-                reason: "email too long (> 254 characters)",
+                reason: String::from("email too long (> 254 characters)"),
             });
         }
 
@@ -65,7 +65,7 @@ impl core::convert::TryFrom<&str> for Email {
             return Err(ValidationError {
                 type_name: "Email",
                 input: String::from(value),
-                reason: "invalid email format",
+                reason: String::from("invalid email format"),
             });
         }
 
@@ -76,7 +76,7 @@ impl core::convert::TryFrom<&str> for Email {
                 return Err(ValidationError {
                     type_name: "Email",
                     input: String::from(value),
-                    reason: "single-label domain not allowed",
+                    reason: String::from("single-label domain not allowed"),
                 });
             }
         }
@@ -133,7 +133,7 @@ impl core::convert::TryFrom<&str> for PhoneE164 {
             return Err(ValidationError {
                 type_name: "PhoneE164",
                 input: String::from(value),
-                reason: "must start with '+'",
+                reason: String::from("must start with '+'"),
             });
         }
 
@@ -142,7 +142,7 @@ impl core::convert::TryFrom<&str> for PhoneE164 {
             return Err(ValidationError {
                 type_name: "PhoneE164",
                 input: String::from(value),
-                reason: "invalid length (6-14 digits after +)",
+                reason: String::from("invalid length (6-14 digits after +)"),
             });
         }
 
@@ -150,7 +150,7 @@ impl core::convert::TryFrom<&str> for PhoneE164 {
             return Err(ValidationError {
                 type_name: "PhoneE164",
                 input: String::from(value),
-                reason: "must contain only digits after +",
+                reason: String::from("must contain only digits after +"),
             });
         }
 
@@ -189,7 +189,7 @@ impl core::convert::TryFrom<&str> for DomainName {
             return Err(ValidationError {
                 type_name: "DomainName",
                 input: String::from(value),
-                reason: "empty string",
+                reason: String::from("empty string"),
             });
         }
 
@@ -197,7 +197,7 @@ impl core::convert::TryFrom<&str> for DomainName {
             return Err(ValidationError {
                 type_name: "DomainName",
                 input: String::from(value),
-                reason: "domain too long (> 253 characters)",
+                reason: String::from("domain too long (> 253 characters)"),
             });
         }
 
@@ -205,7 +205,7 @@ impl core::convert::TryFrom<&str> for DomainName {
             return Err(ValidationError {
                 type_name: "DomainName",
                 input: String::from(value),
-                reason: "scheme not allowed",
+                reason: String::from("scheme not allowed"),
             });
         }
 
@@ -213,7 +213,7 @@ impl core::convert::TryFrom<&str> for DomainName {
             return Err(ValidationError {
                 type_name: "DomainName",
                 input: String::from(value),
-                reason: "spaces not allowed",
+                reason: String::from("spaces not allowed"),
             });
         }
 
@@ -223,7 +223,7 @@ impl core::convert::TryFrom<&str> for DomainName {
                 return Err(ValidationError {
                     type_name: "DomainName",
                     input: String::from(value),
-                    reason: if label.starts_with('-') {
+                    reason: String::from(if label.starts_with('-') {
                         "label starts with hyphen"
                     } else if label.ends_with('-') {
                         "label ends with hyphen"
@@ -231,7 +231,7 @@ impl core::convert::TryFrom<&str> for DomainName {
                         "empty label"
                     } else {
                         "invalid label characters"
-                    },
+                    }),
                 });
             }
         }
