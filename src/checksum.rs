@@ -44,6 +44,37 @@ pub fn mod97_valid(s: &str) -> bool {
     remainder == 1
 }
 
+/// GS1 check digit validator for EAN/UPC/GTIN barcodes
+pub fn gs1_check_digit_valid(digits: &str) -> bool {
+    if digits.len() < 2 {
+        return false;
+    }
+
+    let mut sum = 0;
+    let mut multiplier = 3; // Start with ×3 for rightmost non-check digit
+
+    // Process from right to left, excluding the check digit
+    for c in digits.chars().rev().skip(1) {
+        if let Some(digit) = c.to_digit(10) {
+            sum += digit * multiplier;
+            multiplier = if multiplier == 3 { 1 } else { 3 }; // Alternate 3,1,3,1,...
+        } else {
+            return false; // Non-digit
+        }
+    }
+
+    let check_digit = (10 - (sum % 10)) % 10;
+
+    // Last digit should be the check digit
+    if let Some(last_char) = digits.chars().last() {
+        if let Some(last_digit) = last_char.to_digit(10) {
+            return last_digit == check_digit;
+        }
+    }
+
+    false
+}
+
 /// Numeric expansion for ISIN characters (A-Z -> 10-35 as two digits)
 pub fn isin_numeric_expansion(s: &str) -> String {
     let mut result = String::new();
@@ -76,5 +107,29 @@ mod tests {
         // IBAN test cases
         assert!(mod97_valid("3214282912345698765432161182")); // Valid IBAN checksum
         assert!(!mod97_valid("3214282912345698765432161183")); // Invalid
+    }
+
+    #[test]
+    fn test_gs1_check_digit_valid() {
+        // EAN-8 examples
+        assert!(gs1_check_digit_valid("73513537")); // Valid EAN-8
+        assert!(!gs1_check_digit_valid("73513538")); // Invalid check digit
+
+        // EAN-13 examples
+        assert!(gs1_check_digit_valid("5901234123457")); // Valid EAN-13
+        assert!(!gs1_check_digit_valid("5901234123458")); // Invalid check digit
+
+        // UPC-A examples
+        assert!(gs1_check_digit_valid("012345678905")); // Valid UPC-A
+        assert!(!gs1_check_digit_valid("012345678906")); // Invalid check digit
+
+        // GTIN-14 examples
+        assert!(gs1_check_digit_valid("10614141000415")); // Valid GTIN-14
+        assert!(!gs1_check_digit_valid("10614141000416")); // Invalid check digit
+
+        // Edge cases
+        assert!(!gs1_check_digit_valid("1")); // Too short
+        assert!(!gs1_check_digit_valid("")); // Empty
+        assert!(!gs1_check_digit_valid("123A")); // Non-digit
     }
 }

@@ -147,4 +147,4 @@ GTIN-14: exactly 14 digits, GS1 check digit. Supersedes all shorter GTINs.
 
 ## Status
 
-[ ] Not Started
+[x] Complete
