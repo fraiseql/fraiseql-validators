@@ -1,6 +1,6 @@
 [package]
 name = "fraiseql-validators"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "A no_std library for validating various financial and contact identifiers."
 license = "MIT OR Apache-2.0"
@@ -21,6 +21,7 @@ barcodes = []
 identifiers = []
 geographic = []
 network = []
+fraiseql = ["dep:fraiseql-error"]
 
 [lints.rust]
 unsafe_code = "forbid"
@@ -34,6 +35,7 @@ nursery = "warn"
 [dependencies]
 regex-lite = "0.1"
 once_cell = { version = "1.0", features = ["alloc", "std"], default-features = false }
+fraiseql-error = { version = "2.2", optional = true }
 
 [build-dependencies]
 csv = "1.3"

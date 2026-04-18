@@ -59,3 +59,6 @@ pub mod network;
 
 #[cfg(feature = "geographic")]
 pub mod geographic;
+
+#[cfg(feature = "fraiseql")]
+mod fraiseql_bridge;

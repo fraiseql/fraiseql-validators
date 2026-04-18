@@ -15,7 +15,7 @@ All feature flags are enabled by default. To select only what you need:
 
 ```toml
 [dependencies]
-fraiseql-validators = { version = "0.1", default-features = false, features = ["contact", "barcodes"] }
+fraiseql-validators = { version = "0.2", default-features = false, features = ["contact", "barcodes"] }
 ```
 
 ## Feature flags
@@ -29,6 +29,7 @@ fraiseql-validators = { version = "0.1", default-features = false, features = ["
 | `identifiers`          | `Semver`, `Slug`, `Color`, `Locale`, `Vin`                                                                |
 | `geographic`           | `CountryCode`, `CountryCodeAlpha3`, `LanguageCode`, `PostalCode`, `Latitude`, `Longitude`, `IataAirportCode`, `IcaoAirportCode`, `IanaTimezone` |
 | `network`              | `Port`, `MacAddressEui48`, `MacAddressEui64`, `Ipv4Address`, `Ipv6Address`, `Asn`                         |
+| `fraiseql`             | `ValidationError` conversion to `FraiseQLError` and `ValidationFieldError`                                |
 
 ## Usage
 
@@ -140,6 +141,30 @@ let err = result.unwrap_err();
 assert_eq!(err.type_name, "Email");
 assert_eq!(err.input, "invalid");
 // err.reason describes what went wrong
+```
+
+## FraiseQL integration
+
+Enable the `fraiseql` feature to get direct error conversion for GraphQL responses:
+
+```toml
+[dependencies]
+fraiseql-validators = { version = "0.2", features = ["fraiseql", "contact"] }
+```
+
+```rust
+use fraiseql_validators::contact::Email;
+
+match Email::try_from(user_input) {
+    Ok(email) => { /* use validated email */ }
+    Err(e) => {
+        // Convert to a ValidationFieldError for GraphQL error responses
+        let field_err = e.into_field_error("user.email");
+
+        // Or convert to a FraiseQLError directly
+        // let err = e.into_fraiseql_error();
+    }
+}
 ```
 
 ## `no_std` support
