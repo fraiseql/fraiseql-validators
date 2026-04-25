@@ -8,7 +8,7 @@ Each type enforces its specification at construction time via `TryFrom<&str>`, e
 
 ```toml
 [dependencies]
-fraiseql-validators = "0.1"
+fraiseql-validators = "0.2"
 ```
 
 All feature flags are enabled by default. To select only what you need:
